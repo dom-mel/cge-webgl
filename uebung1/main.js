@@ -113,7 +113,7 @@ var cubeVertexIndexBuffer;
 var sphere;
 
 function initBuffers() {
-    sphere = new sphere(gl, 1);
+    sphere = new sphere(gl, 3);
     sphere.generateBuffers();
 
     cubeVertexPositionBuffer = gl.createBuffer();

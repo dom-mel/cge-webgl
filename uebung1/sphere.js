@@ -20,10 +20,39 @@ sphere.prototype.calculateVertex = function(detail, A, B) {
 };
 
 sphere.prototype.calculateVertices = function(detail, A, B, C) {
-    this.calculateVertex(detail, A, B);
-    this.calculateVertex(detail, B, C);
-    this.calculateVertex(detail, C, A);
+    var AB = this.calculateNormalisedMiddle(A, B);
+    var BC = this.calculateNormalisedMiddle(B, C);
+    var CA = this.calculateNormalisedMiddle(C, A);
+
+    if (detail == 0) {
+        this.addTriangle(A, AB, CA);
+        this.addTriangle(AB, B, BC);
+        this.addTriangle(BC, C, CA);
+        this.addTriangle(AB, BC, CA);
+        return;
+    }
+    this.calculateVertices(detail -1, A, AB, CA);
+    this.calculateVertices(detail -1, AB, B, BC);
+    this.calculateVertices(detail -1, BC, C, CA);
+    this.calculateVertices(detail -1, AB, BC, CA);
 };
+
+sphere.prototype.calculateNormalisedMiddle = function(A, B) {
+    var C = vec3.create([0,0,0]);
+    vec3.add(A, B, C);
+    vec3.normalize(C);
+    return C;
+}
+
+sphere.prototype.addTriangle = function(A, B, C) {
+    this.addPushVector(A);
+    this.addPushVector(B);
+    this.addPushVector(C);
+}
+
+sphere.prototype.addPushVector = function(A) {
+    this.vertices.push(A[0], A[1], A[2]);
+}
 
 sphere.prototype.generateBuffers = function () {
     var cubeVertexPositionBuffer;
