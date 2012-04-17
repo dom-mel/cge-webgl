@@ -1,0 +1,68 @@
+<!Doctype html5>
+<html>
+<head>
+    <title>CGE: Übung1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
+    <script type="text/javascript" src="../lib/webgl-utils.js"></script>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec4 vColor;
+
+        void main(void) {
+        gl_FragColor = vColor;
+        }
+    </script>
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+
+        varying vec4 vColor;
+
+        void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = aVertexColor;
+        }
+    </script>
+
+    <script type="text/javascript" src="sphere.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+
+
+</head>
+<body onload="webGLStart();">
+    <header>
+        <h1>CGE: Übung 1</h1>
+    </header>
+
+    <nav>
+        <a href="../index.html">Zurück zur Übersicht</a>
+    </nav>
+
+    <article>
+        <canvas id="lesson04-canvas" style="border: none;" width="500" height="500"></canvas>
+
+        <h1>Lösungsansatz</h1>
+        <p>
+            ...
+        </p>
+
+        <h1>Verwendete Resourcen</h1>
+        <p>
+
+        </p>
+        <h1>Bediendungsanleitung</h1>
+        <p>
+
+        </p>
+    </article>
+
+</body>
+</html>
