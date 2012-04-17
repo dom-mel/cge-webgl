@@ -78,12 +78,12 @@ function initShaders() {
 }
 
 
-var mvMatrix = mat4.create();
+var mvMatrix = mat4.create([0,0,0]);
 var mvMatrixStack = [];
-var pMatrix = mat4.create();
+var pMatrix = mat4.create([0,0,0]);
 
 function mvPushMatrix() {
-    var copy = mat4.create();
+    var copy = mat4.create([0,0,0]);
     mat4.set(mvMatrix, copy);
     mvMatrixStack.push(copy);
 }
@@ -118,7 +118,7 @@ function initBuffers() {
 
     cubeVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-    vertices = [
+    var vertices = [
         // Front face
         -1.0, -1.0,  1.0,
         1.0, -1.0,  1.0,
@@ -161,7 +161,7 @@ function initBuffers() {
 
     cubeVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
-    colors = [
+    var colors = [
         [1.0, 0.0, 0.0, 1.0], // Front face
         [1.0, 1.0, 0.0, 1.0], // Back face
         [0.0, 1.0, 0.0, 1.0], // Top face
@@ -209,30 +209,55 @@ function drawScene() {
 
     mat4.translate(mvMatrix, [-1.5, 0.0, -8.0]);
 
-    mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(rPyramid), [0, 1, 0]);
+    mvPushMatrix(); {
+        mat4.rotate(mvMatrix, degToRad(rPyramid), [0, 1, 0]);
 
-    setMatrixUniforms();
-    sphere.draw();
-
+        setMatrixUniforms();
+        sphere.draw();
+    }
     mvPopMatrix();
 
 
     mat4.translate(mvMatrix, [3.0, 0.0, 0.0]);
 
-    mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(rCube), [1, 1, 1]);
+    mvPushMatrix(); {
+        mat4.rotate(mvMatrix, degToRad(rCube), [1, 1, 1]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, cubeVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, cubeVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
-    setMatrixUniforms();
-    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 
+        mvPushMatrix(); {
+
+            var sphereTranslations = [
+                [-1.0, -1.0,  1.0],
+                [1.0, -1.0,  1.0],
+                [1.0,  1.0,  1.0],
+                [-1.0,  1.0,  1.0],
+                [-1.0, -1.0, -1.0],
+                [-1.0,  1.0, -1.0],
+                [1.0,  1.0, -1.0],
+                [1.0, -1.0, -1.0]
+            ];
+
+            for (var i = 0; i < sphereTranslations.length; i++) {
+                mvPushMatrix(); {
+                    mat4.translate(mvMatrix, sphereTranslations[i]);
+                    mat4.scale(mvMatrix, [0.5, 0.5, 0.5]);
+                    setMatrixUniforms();
+                    sphere.draw();
+                }
+                mvPopMatrix();
+            }
+        }
+        mvPopMatrix();
+    }
     mvPopMatrix();
 
 }
@@ -262,7 +287,7 @@ function tick() {
 function webGLStart() {
     var canvas = document.getElementById("lesson04-canvas");
     initGL(canvas);
-    initShaders()
+    initShaders();
     initBuffers();
 
     gl.clearColor(0.0, 0.0, 0.0, 1.0);

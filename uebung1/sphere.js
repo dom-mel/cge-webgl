@@ -94,7 +94,6 @@ sphere.prototype.generateBuffers = function () {
     cubeVertexPositionBuffer.itemSize = 3;
     var length = this.vertices.length / cubeVertexPositionBuffer.itemSize;
     cubeVertexPositionBuffer.numItems = length;
-    console.log(this.vertices);
     cubeVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
 
