@@ -1,8 +1,16 @@
-<!Doctype html5>
-<html>
+<!Doctype html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>CGE: Übung1</title>
+    <title>CGE: Übung 1</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
+    <link href="../css/bootstrap-responsive.css" rel="stylesheet">
 
     <script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
     <script type="text/javascript" src="../lib/webgl-utils.js"></script>
@@ -35,34 +43,50 @@
     <script type="text/javascript" src="sphere.js"></script>
     <script type="text/javascript" src="main.js"></script>
 
-
 </head>
 <body onload="webGLStart();">
-    <header>
-        <h1>CGE: Übung 1</h1>
-    </header>
+<header class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="../index.html">CGE Übungen SS 2012</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active"><a href="../uebung1/index.html">Übung 1</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
 
-    <nav>
-        <a href="../index.html">Zurück zur Übersicht</a>
-    </nav>
+<div class="container">
 
-    <article>
-        <canvas id="lesson04-canvas" style="border: none;" width="500" height="500"></canvas>
+    <div class="page-header">
+        <h1>Übung 1</h1>
+    </div>
 
-        <h1>Lösungsansatz</h1>
-        <p>
-            ...
-        </p>
+    <canvas id="lesson04-canvas" width="500" height="500" ></canvas>
 
-        <h1>Verwendete Resourcen</h1>
-        <p>
+    <h2>Lösungsansatz</h2>
+    <p>
+        ...
+    </p>
 
-        </p>
-        <h1>Bediendungsanleitung</h1>
-        <p>
+    <h2>Verwendete Resourcen</h2>
+    <p>
+        ...
+    </p>
+    <h2>Bediendungsanleitung</h2>
+    <p>
+        ...
+    </p>
+</div>
 
-        </p>
-    </article>
+
 
 </body>
 </html>

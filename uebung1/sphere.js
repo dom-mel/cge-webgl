@@ -1,56 +1,87 @@
 
-
 var sphere = function (gl, detail) {
-    this.recrusion = detail;
+    this.detail = detail;
     this.gl = gl;
-}
+    this.vertices = [];
+};
 
-sphere.prototype.generateBuffers = function() {
+sphere.prototype.calculateVertex = function(detail, A, B) {
+    var AB = vec3.create([0,0,0]);
+    vec3.add(A, B, AB);
+    vec3.normalize(AB);
+    if (detail == 0) {
+        this.vertices.push(A[0], A[1], A[2]);
+        this.vertices.push(AB[0], AB[1], AB[2]);
+        this.vertices.push(B[0], B[1], B[2]);
+        return;
+    }
+    this.calculateVertex(detail-1, A, AB);
+    this.calculateVertex(detail-1, AB, B);
+};
+
+sphere.prototype.calculateVertices = function(detail, A, B, C) {
+    this.calculateVertex(detail, A, B);
+    this.calculateVertex(detail, B, C);
+    this.calculateVertex(detail, C, A);
+};
+
+sphere.prototype.generateBuffers = function () {
     var cubeVertexPositionBuffer;
     var cubeVertexColorBuffer;
     cubeVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-    var vertices = [
-        // Front face
-        0.0,  1.0,  0.0,
-        -1.0, -1.0,  1.0,
-        1.0, -1.0,  1.0,
 
-        // Right face
-        0.0,  1.0,  0.0,
-        1.0, -1.0,  1.0,
-        1.0, -1.0, -1.0,
+    var a = [0,0,1];
+    var b = [0.943,0,-0.333];
+    var c = [-0.471,0.816,-0.333];
+    var d = [-0.471,-0.816,-0.333];
 
-        // Back face
-        0.0,  1.0,  0.0,
-        1.0, -1.0, -1.0,
-        -1.0, -1.0, -1.0,
+    // Front face
+    this.calculateVertices(this.detail,
+        new glMatrixArrayType(a),
+        new glMatrixArrayType(b),
+        new glMatrixArrayType(c));
 
-        // Left face
-        0.0,  1.0,  0.0,
-        -1.0, -1.0, -1.0,
-        -1.0, -1.0,  1.0
-    ];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    // Right face
+    this.calculateVertices(this.detail,
+        new glMatrixArrayType(a),
+        new glMatrixArrayType(c),
+        new glMatrixArrayType(d));
+
+
+    // Back face
+    this.calculateVertices(this.detail,
+        new glMatrixArrayType(a),
+        new glMatrixArrayType(d),
+        new glMatrixArrayType(b));
+
+    // Left face
+    this.calculateVertices(this.detail,
+        new glMatrixArrayType(b),
+        new glMatrixArrayType(c),
+        new glMatrixArrayType(d));
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
     cubeVertexPositionBuffer.itemSize = 3;
-    cubeVertexPositionBuffer.numItems = vertices.length / cubeVertexPositionBuffer.itemSize;
-
+    var length = this.vertices.length / cubeVertexPositionBuffer.itemSize;
+    cubeVertexPositionBuffer.numItems = length;
+    console.log(this.vertices);
     cubeVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
 
     var colors = [];
-    for (var i = 0; i < 12; i++) {
+    for (var i = 0; i < length; i++) {
         colors = colors.concat([0.7, 0.7, 0.7, 1.0]);
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     cubeVertexColorBuffer.itemSize = 4;
-    cubeVertexColorBuffer.numItems = 12;
+    cubeVertexColorBuffer.numItems = length;
 
     this.cubeVertexPositionBuffer = cubeVertexPositionBuffer;
     this.cubeVertexColorBuffer = cubeVertexColorBuffer;
     this.cubeVertexPositionBuffer = cubeVertexPositionBuffer;
     this.cubeVertexColorBuffer = cubeVertexColorBuffer;
-}
+};
 
 sphere.prototype.draw = function() {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
@@ -60,4 +91,4 @@ sphere.prototype.draw = function() {
     gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, this.cubeVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
     gl.drawArrays(gl.TRIANGLES, 0, this.cubeVertexPositionBuffer.numItems);
-}
+};
