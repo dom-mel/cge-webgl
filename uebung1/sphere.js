@@ -6,10 +6,10 @@ var sphere = function (gl, detail) {
 }
 
 sphere.prototype.generateBuffers = function() {
-    var pyramidVertexPositionBuffer;
-    var pyramidVertexColorBuffer;
-    pyramidVertexPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexPositionBuffer);
+    var cubeVertexPositionBuffer;
+    var cubeVertexColorBuffer;
+    cubeVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
     var vertices = [
         // Front face
         0.0,  1.0,  0.0,
@@ -32,48 +32,32 @@ sphere.prototype.generateBuffers = function() {
         -1.0, -1.0,  1.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-    pyramidVertexPositionBuffer.itemSize = 3;
-    pyramidVertexPositionBuffer.numItems = 12;
+    cubeVertexPositionBuffer.itemSize = 3;
+    cubeVertexPositionBuffer.numItems = vertices.length / cubeVertexPositionBuffer.itemSize;
 
-    pyramidVertexColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexColorBuffer);
-    var colors = [
-        // Front face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
+    cubeVertexColorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
 
-        // Right face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-
-        // Back face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-
-        // Left face
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-        0.0, 1.0, 0.0, 1.0
-    ];
+    var colors = [];
+    for (var i = 0; i < 12; i++) {
+        colors = colors.concat([0.7, 0.7, 0.7, 1.0]);
+    }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    pyramidVertexColorBuffer.itemSize = 4;
-    pyramidVertexColorBuffer.numItems = 12;
+    cubeVertexColorBuffer.itemSize = 4;
+    cubeVertexColorBuffer.numItems = 12;
 
-    this.pyramidVertexPositionBuffer = pyramidVertexPositionBuffer;
-    this.pyramidVertexColorBuffer = pyramidVertexColorBuffer;
-    this.pyramidVertexPositionBuffer = pyramidVertexPositionBuffer;
-    this.pyramidVertexColorBuffer = pyramidVertexColorBuffer;
+    this.cubeVertexPositionBuffer = cubeVertexPositionBuffer;
+    this.cubeVertexColorBuffer = cubeVertexColorBuffer;
+    this.cubeVertexPositionBuffer = cubeVertexPositionBuffer;
+    this.cubeVertexColorBuffer = cubeVertexColorBuffer;
 }
 
 sphere.prototype.draw = function() {
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.pyramidVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.pyramidVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, this.cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.pyramidVertexColorBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, this.pyramidVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.cubeVertexColorBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, this.cubeVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    gl.drawArrays(gl.TRIANGLES, 0, this.pyramidVertexPositionBuffer.numItems);
+    gl.drawArrays(gl.TRIANGLES, 0, this.cubeVertexPositionBuffer.numItems);
 }
