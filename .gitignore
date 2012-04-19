@@ -1,3 +1,5 @@
 .idea
 cge.iml
 *.swp
+.project
+.settings
