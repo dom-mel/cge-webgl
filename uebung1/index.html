@@ -11,6 +11,7 @@
         }
     </style>
     <link href="../css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../css/my.css" rel="stylesheet">
 
     <script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
     <script type="text/javascript" src="../lib/webgl-utils.js"></script>
@@ -66,27 +67,82 @@
 <div class="container">
 
     <div class="page-header">
-        <h1>Tetraeder Sphere</h1>
+        <h1>Tetraeder Sphere <small>Übung 1</small></h1>
     </div>
 
-    <canvas id="lesson04-canvas" width="500" height="500" ></canvas>
 
-    <h2>Lösungsansatz</h2>
-    <p>
-        ...
-    </p>
+    <div class="row">
+        <div class="span6">
+            <h2>Aufgabe</h2>
+            <p>
+                Es soll die Pyramide aus der <a href="http://learningwebgl.com/blog/?p=370" target="_blank">WebGL Lesson 4</a>
+                durch eine Kugel ersetzt werden. Zur Darstellung der Kugel sollen Dreiecke verwendet werden.
+                Die Dreiecke sollen durch rekrusive Unterteilung eines Tetraeders realisiert werden.
+            </p>
+            <h2>Lösungsansatz</h2>
+            <p>
+                Um aus einem Tetraeder eine Kugel zu erzeugen müssen alle Eckpunkte des Tetraeders auf der
+                späteren Kugeloberfläche liegen. Die Kugel an die wir uns anähern hat den Mittelpunkt M
+                im Ursprung des Koordinaten Systems und dem Radius r=1.
+                Für die Zerlegung des Tetraeders werden alle Seitendreiecke des Tetraeders einzeln betrachtet.
+                Das Dreieck besteht aus den Eckpunkten A, B und C. Wir zerlegen nun dieses Dreieck in 4 kleinere
+                Dreiecke, siehe Abbildung 1. Dazu benötigen wir die Mittelpunkte AB, BC und AC der Geraden
+                <span class="overline">AB</span>, <span class="overline">BC</span> und <span class="overline">AC</span>.
+                Die Punkte AB, BC und AC liegen nun auf der Oberfläche des Tetraeders. Um diese nun an den Kreis
+                anzunähern müssen diese lediglich normalisiert werden um auf der Kugeloberfläche zu liegen,
+                siehe Abbildung 2. Je nach gewünschtem Detailgrad können nun die Schritte beliebig oft auf die
+                neu zerlegten Dreiecke angewand werden.
+            </p>
+            <ul class="thumbnails">
+                <li class="span3">
+                    <div class="thumbnail">
+                        <img src="desc1.jpg" style="width: 200px;" alt="Zerlegung des Dreieckes" title="Abbildung 1" />
+                        <div class="caption">
+                            <h5>Abbildung 1</h5>
+                            <p>Zerlegung des Dreieckes anhand der Mittelpunkte der Kanten.</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="span3">
+                    <div class="thumbnail">
+                        <img src="desc2.jpg" style="width: 200px;" alt="Verschiebung eines Punktes auf die Kreis
+                        Oberfläche" title="Abbildung 2" />
+                        <div class="caption">
+                            <h5>Abbildung 2</h5>
+                            <p>
+                                Verschiebung eines Punktes von der Oberfläche des Tetraeders (AB) auf die Oberfläche
+                                des Kreises (AB').
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <h2>Quellcode</h2>
+            <ul>
+                <li>
+                    <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung1/main.js" target="_blank">
+                        Geänderte main.js aus der WebGL Lesson 4
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung1/sphere.js" target="_blank">
+                        Die sphere.js mit algorithmus zum zerlegen des Tetraeders.
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="span6">
+            <h2>Demo</h2>
+            <canvas id="lesson04-canvas" width="500" height="500" ></canvas>
 
-    <h2>Verwendete Resourcen</h2>
-    <p>
-        ...
-    </p>
-    <h2>Bediendungsanleitung</h2>
-    <p>
-        ...
-    </p>
+            <h2>Verwendete Resourcen</h2>
+            <ul>
+                <li><a href="https://github.com/toji/gl-matrix" target="_blank">glMatrix Bibliothek</a></li>
+                <li><a href="http://learningwebgl.com/blog/?p=370" target="_blank">4. Übung von Learning WebGL</a></li>
+                <li><a href="http://twitter.github.com/bootstrap/" target="_blank">Bootstrap CSS für das Layout</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
-
-
-
 </body>
 </html>

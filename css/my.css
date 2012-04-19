@@ -1,0 +1,10 @@
+.overline {
+    text-decoration: overline;
+}
+p {
+    text-align: justify;
+}
+
+.caption p {
+    text-align: left;
+}
