@@ -57,7 +57,7 @@
             <a class="brand" href="../index.html">Computer Graphics and Effects</a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li class="active"><a href="../uebung1/index.html">&Uuml;bung1</a></li>
+                    <li class="active"><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a></li>
                 </ul>
             </div>
         </div>
@@ -67,7 +67,7 @@
 <div class="container">
 
     <div class="page-header">
-        <h1><small>Übung 1:</small>&nbsp;Approximierung einer Kugel durch einen Tetraeder</h1>
+        <h1>Übung 1&nbsp;<small>Approximierung einer Kugel durch einen Tetraeder</small></h1>
     </div>
 
 
@@ -81,17 +81,17 @@
             </p>
             <h2>Lösungsansatz</h2>
             <p>
-                Um aus einem Tetraeder eine Kugel zu erzeugen müssen alle Eckpunkte des Tetraeders auf der
-                späteren Kugeloberfläche liegen. Die Kugel an die wir uns anähern hat den Mittelpunkt M
-                im Ursprung des Koordinaten Systems und dem Radius r=1.
+                Um aus einem Tetraeder eine Kugel zu erzeugen, müssen alle Eckpunkte des Tetraeders auf der
+                Kugeloberfläche liegen. Die Kugel, an die wir uns anähern, hat den Mittelpunkt <span class="math">M</span>
+                im Ursprung des Koordinatensystems und den Radius <span class="math">r=1</span>.
                 Für die Zerlegung des Tetraeders werden alle Seitendreiecke des Tetraeders einzeln betrachtet.
-                Das Dreieck besteht aus den Eckpunkten A, B und C. Wir zerlegen nun dieses Dreieck in 4 kleinere
-                Dreiecke, siehe Abbildung 1. Dazu benötigen wir die Mittelpunkte AB, BC und AC der Geraden
-                <span class="overline">AB</span>, <span class="overline">BC</span> und <span class="overline">AC</span>.
-                Die Punkte AB, BC und AC liegen nun auf der Oberfläche des Tetraeders. Um diese nun an den Kreis
-                anzunähern müssen diese lediglich normalisiert werden um auf der Kugeloberfläche zu liegen,
-                siehe Abbildung 2. Je nach gewünschtem Detailgrad können nun die Schritte beliebig oft auf die
-                neu zerlegten Dreiecke angewand werden.
+                Das Dreieck besteht aus den Eckpunkten <span class="math">A, B</span> und <span class="math">C</span>. Wir zerlegen nun dieses Dreieck in 4 kleinere
+                Dreiecke (s. Abb. 1). Dazu benötigen wir die Mittelpunkte <span class="math">AB</span>, <span class="math">BC</span> und <span class="math">AC</span> der Geraden
+                <span class="math overline">AB</span>, <span class="math overline">BC</span> und <span class="math overline">AC</span>.
+                Die Vektoren <span class="math">AB</span>, <span class="math">BC</span> und <span class="math">AC</span> liegen nun auf der Oberfläche des Tetraeders. Um diese nun an den Kreis
+                anzunähern müssen diese lediglich normalisiert werden, wodurch sie auf der Kugeloberfläche liegen (
+                s. Abb. 2). Je nach gewünschtem Detailgrad können nun die Schritte beliebig oft auf die
+                neu zerlegten Dreiecke angewandt werden.
             </p>
             <ul class="thumbnails">
                 <li class="span3">
@@ -99,7 +99,7 @@
                         <img src="desc1.jpg" style="width: 200px;" alt="Zerlegung des Dreieckes" title="Abbildung 1" />
                         <div class="caption">
                             <h5>Abbildung 1</h5>
-                            <p>Zerlegung des Dreieckes anhand der Mittelpunkte der Kanten.</p>
+                            <p>Zerlegung des Dreieckes durch Kantenmittelpunkte.</p>
                         </div>
                     </div>
                 </li>
