@@ -85,7 +85,7 @@ sphere.prototype.generateBuffers = function () {
 
     var colors = [];
     for (var i = 0; i < length; i++) {
-        colors = colors.concat([0.7, 0.7, 0.7, 1.0]);
+        colors = colors.concat([0.3, 0.3, 0.7, 1.0]);
     }
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     cubeVertexColorBuffer.itemSize = 4;
