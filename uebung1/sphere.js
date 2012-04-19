@@ -5,20 +5,6 @@ var sphere = function (gl, detail) {
     this.vertices = [];
 };
 
-sphere.prototype.calculateVertex = function(detail, A, B) {
-    var AB = vec3.create([0,0,0]);
-    vec3.add(A, B, AB);
-    vec3.normalize(AB);
-    if (detail == 0) {
-        this.vertices.push(A[0], A[1], A[2]);
-        this.vertices.push(AB[0], AB[1], AB[2]);
-        this.vertices.push(B[0], B[1], B[2]);
-        return;
-    }
-    this.calculateVertex(detail-1, A, AB);
-    this.calculateVertex(detail-1, AB, B);
-};
-
 sphere.prototype.calculateVertices = function(detail, A, B, C) {
     var AB = this.calculateNormalisedMiddle(A, B);
     var BC = this.calculateNormalisedMiddle(B, C);
