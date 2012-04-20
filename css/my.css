@@ -1,5 +1,5 @@
-.math {
-	font-family: courier-new;
+span.math {
+	font-family: courier-new, serif;
 }
 
 .overline {
@@ -11,4 +11,13 @@ p {
 
 .caption p {
     text-align: left;
+}
+
+canvas {
+    width: 100%;
+}
+
+img.math {
+    display: block;
+    margin: 0 auto;
 }

@@ -87,12 +87,16 @@
                 Kugeloberfläche liegen. Die Kugel, an die wir uns anähern, hat den Mittelpunkt <span class="math">M</span>
                 im Ursprung des Koordinatensystems und den Radius <span class="math">r=1</span>.
                 Für die Zerlegung des Tetraeders werden alle Seitendreiecke des Tetraeders einzeln betrachtet.
-                Das Dreieck besteht aus den Eckpunkten <span class="math">A, B</span> und <span class="math">C</span>. Wir zerlegen nun dieses Dreieck in 4 kleinere
-                Dreiecke (s. Abb. 1). Dazu benötigen wir die Mittelpunkte <span class="math">AB</span>, <span class="math">BC</span> und <span class="math">AC</span> der Geraden
+                Das Dreieck besteht aus den Eckpunkten <span class="math">A, B</span> und <span class="math">C</span>.
+                Wir zerlegen nun dieses Dreieck in 4 kleinere Dreiecke (s. Abb. 1). Dazu benötigen wir die Mittelpunkte
+                <span class="math">AB</span>, <span class="math">BC</span> und <span class="math">AC</span> der Geraden
                 <span class="math overline">AB</span>, <span class="math overline">BC</span> und <span class="math overline">AC</span>.
                 Die Vektoren <span class="math">AB</span>, <span class="math">BC</span> und <span class="math">AC</span> liegen nun auf der Oberfläche des Tetraeders. Um diese nun an den Kreis
                 anzunähern müssen diese lediglich normalisiert werden, wodurch sie auf der Kugeloberfläche liegen (
-                s. Abb. 2). Je nach gewünschtem Detailgrad können nun die Schritte beliebig oft auf die
+                s. Abb. 2). Um also den neuen Punkt <span class="math">AB</span> auf der Kugeloberfläche zu berechnen
+                gilt,
+                <img src="formular1.jpg" alt="normalize(A+B)" class="math" />
+                Je nach gewünschtem Detailgrad können nun die Schritte beliebig oft auf die
                 neu zerlegten Dreiecke angewandt werden.
             </p>
             <ul class="thumbnails">
@@ -119,6 +123,10 @@
                     </div>
                 </li>
             </ul>
+        </div>
+        <div class="span6">
+            <h2>Demo</h2>
+            <canvas id="lesson04-canvas" width="500" height="500" ></canvas>
             <h2>Quellcode</h2>
             <ul>
                 <li>
@@ -132,17 +140,13 @@
                     </a>
                 </li>
             </ul>
-        </div>
-        <div class="span6">
-            <h2>Demo</h2>
-            <canvas id="lesson04-canvas" width="500" height="500" ></canvas>
-
             <h2>Verwendete Resourcen</h2>
             <ul>
                 <li><a href="https://github.com/toji/gl-matrix" target="_blank">glMatrix Bibliothek</a></li>
                 <li><a href="http://learningwebgl.com/blog/?p=370" target="_blank">4. Übung von Learning WebGL</a></li>
                 <li><a href="http://twitter.github.com/bootstrap/" target="_blank">Bootstrap CSS für das Layout</a></li>
             </ul>
+
         </div>
     </div>
 </div>
