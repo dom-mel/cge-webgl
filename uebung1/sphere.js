@@ -3,6 +3,7 @@ var sphere = function (gl, detail) {
     this.detail = detail;
     this.gl = gl;
     this.vertices = [];
+    this.colors = [];
 };
 
 sphere.prototype.calculateVertices = function(detail, A, B, C) {
@@ -28,17 +29,27 @@ sphere.prototype.calculateNormalisedMiddle = function(A, B) {
     vec3.add(A, B, C);
     vec3.normalize(C);
     return C;
-}
+};
 
 sphere.prototype.addTriangle = function(A, B, C) {
     this.addPushVector(A);
     this.addPushVector(B);
     this.addPushVector(C);
-}
+};
+
+sphere.prototype.addColor = function(A, B, C) {
+    this.colors.push(
+        (A + 1) / 2,
+        (B + 1) / 2,
+        (C + 1) / 2,
+        1
+    );
+};
 
 sphere.prototype.addPushVector = function(A) {
     this.vertices.push(A[0], A[1], A[2]);
-}
+    this.addColor(A[0], A[1], A[2]);
+};
 
 sphere.prototype.generateBuffers = function () {
     var cubeVertexPositionBuffer;
@@ -82,12 +93,7 @@ sphere.prototype.generateBuffers = function () {
     cubeVertexPositionBuffer.numItems = length;
     cubeVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
-
-    var colors = [];
-    for (var i = 0; i < length; i++) {
-        colors = colors.concat([0.3, 0.3, 0.7, 1.0]);
-    }
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colors), gl.STATIC_DRAW);
     cubeVertexColorBuffer.itemSize = 4;
     cubeVertexColorBuffer.numItems = length;
 
