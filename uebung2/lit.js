@@ -26,10 +26,8 @@ function initialize() {
 	var frag = window.location.hash.substring(1);
 	var pnum = frag ? parseInt(frag) : 0;
 
-	// Create a sphere mesh that initialy is renderd using the first shader
-	// program.
-	var sphere = new tdl.models.Model(programs[pnum], tdl.primitives
-			.createSphere(0.4, 20, 24));
+	var torus = new tdl.models.Model(programs[4], tdl.primitives
+			.createTorus(0.28, 0.16, 32, 32));
 
 	// Register a keypress-handler for shader program switching using the number
 	// keys.
@@ -38,13 +36,18 @@ function initialize() {
 		if (n == "s")
 			animate = !animate;
 		else
-			sphere.setProgram(programs[n % programs.length]);
+			torus.setProgram(programs[n % programs.length]);
 	};
 
 	// Create some matrices and vectors now to save time later.
 	var projection = mat4.create();
 	var view = mat4.create();
 	var model = mat4.create();
+
+	//model.b[5] = 0.0;
+//	model.b[6] = -1.0;
+//	model.b[9] = 1.0;
+//	model.b[10] = 0.0;
 
 	// Uniforms for lighting.
 	var lightPosition = vec3.create([ 10, 10, 10 ]);
@@ -67,7 +70,7 @@ function initialize() {
 	var clock = 0.0;
 
 	// Uniform variables that are the same for all sphere in one frame.
-	var sphereConst = {
+	var torusConst = {
 		view : view,
 		projection : projection,
 		eyePosition : eyePosition,
@@ -77,7 +80,7 @@ function initialize() {
 	};
 
 	// Uniform variables that change for each sphere in a frame.
-	var spherePer = {
+	var torusPer = {
 		model : model,
 		color : color
 	};
@@ -118,22 +121,22 @@ function initialize() {
 		mat4.lookAt(eyePosition, target, up, view);
 
 		// Prepare rendering of spheres.
-		sphereConst.time = clock;
-		sphere.drawPrep(sphereConst);
+		torusConst.time = clock;
+		torus.drawPrep(torusConst);
 
 		var across = 3;
 		var half = (across - 1) * 0.5;
 		for ( var xx = 0; xx < across; ++xx) {
 			for ( var yy = 0; yy < across; ++yy) {
 				for ( var zz = 0; zz < across; ++zz) {
-					mat4.translate(mat4.identity(spherePer.model), [ xx - half,
+					mat4.translate(mat4.identity(torusPer.model), [ xx - half,
 							yy - half, zz - half ]);
-					spherePer.color[0] = xx / (across - 1);
-					spherePer.color[1] = yy / (across - 1);
-					spherePer.color[2] = zz / (across - 1);
+					torusPer.color[0] = xx / (across - 1);
+					torusPer.color[1] = yy / (across - 1);
+					torusPer.color[2] = zz / (across - 1);
 
 					// Actually render one sphere.
-					sphere.draw(spherePer);
+					torus.draw(torusPer);
 				}
 			}
 		}
