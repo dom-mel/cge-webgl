@@ -12,258 +12,6 @@
 	</style>
 	<link href="../css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="../css/my.css" rel="stylesheet">
-	
-	<script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
-	<script type="text/javascript" src="../lib/webgl-utils.js"></script>
-	<script type="text/javascript" src="../lib/tdl/base.js"></script>
-	<script type="text/javascript" src="../lib/tdl/webgl.js"></script>
-	<script type="text/javascript" src="../lib/tdl/models.js"></script>
-	<script type="text/javascript" src="../lib/tdl/primitives.js"></script>
-	<script type="text/javascript" src="../lib/tdl/programs.js"></script>
-	
-	<script type="text/javascript" src="lit.js"></script>
-	
-	<script id="sphereVertexShader0" type="text/glsl">
-uniform mat4 projection;
-uniform mat4 view;
-uniform mat4 model;
-
-attribute vec4 position;
-attribute vec3 normal;
-
-void main() {
-  gl_Position = projection * view * model * position;
-}
-	</script>
-	
-	<script id="sphereFragmentShader0" type="text/glsl">
-precision highp float;
-
-uniform vec3 color;
-
-void main() {
-  gl_FragColor.rgb = 0.7 * color;
-  gl_FragColor.a = 1.0;
-}
-	</script>
-	
-	<!-- Lambert lighting model, Gouraud shading -->
-	
-	<script id="sphereVertexShader1" type="text/glsl">
-uniform mat4 projection;
-uniform mat4 view;
-uniform mat4 model;
-
-uniform vec3 color;
-uniform vec3 lightIntensity;
-uniform vec3 lightPosition;
-uniform vec3 eyePosition;
-
-attribute vec4 position;
-attribute vec3 normal;
-
-varying vec3 intensity;
-
-vec3 lambert(vec3 normal, vec3 light, 
-             vec3 intensity, vec3 reflectivity) {
-  return 0.1 * reflectivity * intensity +
-         0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
-}
-
-void main() {
-  vec3 normalW = (model * vec4(normal, 0.0)).xyz;
-  vec4 positionW = model * position;
-  vec3 lightDirectionW = normalize(lightPosition - positionW.xyz);
-
-  intensity = lambert(normalW, lightDirectionW, lightIntensity, color);
-  gl_Position = projection * view * positionW;
-}
-	</script>
-	
-	<script id="sphereFragmentShader1" type="text/glsl">
-precision highp float;
-
-varying vec3 intensity;
-
-void main() {
-  gl_FragColor.rgb = intensity;
-  gl_FragColor.a = 1.0;
-}
-	</script>
-	
-	<!-- Phong lighting model, Gouraud shading -->
-	
-	<script id="sphereVertexShader2" type="text/glsl">
-uniform mat4 projection;
-uniform mat4 view;
-uniform mat4 model;
-
-uniform vec3 color;
-uniform vec3 lightIntensity;
-uniform vec3 lightPosition;
-uniform vec3 eyePosition;
-
-attribute vec4 position;
-attribute vec3 normal;
-
-varying vec3 intensity;
-
-vec3 lambert(vec3 normal, vec3 light, 
-             vec3 intensity, vec3 reflectivity) {
-  return 0.1 * reflectivity * intensity +
-         0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
-}
-
-vec3 phong(vec3 normal, vec3 eye, vec3 light, 
-           vec3 intensity, vec3 reflectivity) {
-  return lambert(normal, light, intensity, reflectivity) +
-         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal), 
-                                      light)), 10.0);
-}
-
-void main() {
-  vec3 normalW = (model * vec4(normal, 0.0)).xyz;
-  vec4 positionW = model * position;
-  vec3 lightDirectionW = normalize(lightPosition - positionW.xyz);
-  vec3 eyeDirectionW = normalize(eyePosition - positionW.xyz);
-
-  intensity = phong(normalW, eyeDirectionW, lightDirectionW, 
-                    lightIntensity, color);
-  gl_Position = projection * view * positionW;
-}
-	</script>
-	
-	<script id="sphereFragmentShader2" type="text/glsl">
-precision highp float;
-
-varying vec3 intensity;
-
-void main() {
-  gl_FragColor.rgb = intensity;
-  gl_FragColor.a = 1.0;
-}
-	</script>
-	
-	<!-- Phong lighting model, Phong shading -->
-	
-	<script id="sphereVertexShader3" type="text/glsl">
-uniform mat4 projection;
-uniform mat4 view;
-uniform mat4 model;
-
-uniform vec3 lightPosition;
-uniform vec3 eyePosition;
-
-attribute vec4 position;
-attribute vec3 normal;
-
-varying vec3 normalW;
-varying vec3 lightDirectionW;
-varying vec3 eyeDirectionW;
-
-void main() {
-  vec4 positionW = model * position;
-  normalW = (model * vec4(normal, 0.0)).xyz;
-  lightDirectionW = lightPosition - positionW.xyz;
-  eyeDirectionW = eyePosition - positionW.xyz;
-
-  gl_Position = projection * view * positionW;
-}
-	</script>
-	
-	<script id="sphereFragmentShader3" type="text/glsl">
-precision highp float;
-
-uniform vec3 color;
-uniform vec3 lightIntensity;
-
-varying vec3 normalW;
-varying vec3 lightDirectionW;
-varying vec3 eyeDirectionW;
-
-vec3 lambert(vec3 normal, vec3 light, 
-             vec3 intensity, vec3 reflectivity) {
-  return 0.1 * reflectivity * intensity +
-         0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
-}
-
-vec3 phong(vec3 normal, vec3 eye, vec3 light, 
-           vec3 intensity, vec3 reflectivity) {
-  return lambert(normal, light, intensity, reflectivity) +
-         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal), 
-                                      light)), 10.0);
-}
-
-void main() {
-  gl_FragColor.rgb = phong(
-    normalize(normalW), 
-    normalize(eyeDirectionW), 
-    normalize(lightDirectionW), 
-    lightIntensity, color);
-  gl_FragColor.a = 1.0;
-}
-	</script>
-	
-	<script id="sphereVertexShader4" type="text/glsl">
-		uniform mat4 projection;
-		uniform mat4 view;
-		uniform mat4 model;
-
-		uniform vec3 lightPosition;
-		uniform vec3 eyePosition;
-
-		attribute vec4 position;
-		attribute vec3 normal;
-
-		varying vec3 normalW;
-		varying vec3 lightDirectionW;
-		varying vec3 eyeDirectionW;
-
-		void main() {
-  			vec4 positionW = model * position;
-  			normalW = (model * vec4(normal, 0.0)).xyz;
-  			lightDirectionW = lightPosition - positionW.xyz;
-  			eyeDirectionW = eyePosition - positionW.xyz;
-  			gl_Position = projection * view * positionW;
-		}
-	</script>
-	
-	<script id="sphereFragmentShader4" type="text/glsl">
-		precision highp float;
-
-		uniform vec3 color;
-		uniform vec3 lightIntensity;
-
-		varying vec3 normalW;
-		varying vec3 lightDirectionW;
-		varying vec3 eyeDirectionW;
-
-		float step = 0.2;
-
-		// returns the cosinus of the angle between vectors a and b
-		float cosPhi(vec3 a, vec3 b) {
-			return dot(a, b) / (length(a) * length(b));
-		}
-
-		vec3 toon(vec3 normal, vec3 eye, vec3 light, 
-           		vec3 intensity, vec3 reflectivity) {
-			float diffuse = max(0.0, cosPhi(normal, light));
-			float discrete = max(step, floor(diffuse / step) * step);
-			vec3 reflection = normalize(reflect(-eye, normal));
-			float spec = floor(max(0.0, cosPhi(reflection, light)) + step) * step;
-			return reflectivity * intensity * discrete + spec;
-		}
-
-		void main() {
-			gl_FragColor.rgb = toon(
-    			normalize(normalW), 
-    			normalize(eyeDirectionW), 
-    			normalize(lightDirectionW), 
-    			lightIntensity, color);
-			gl_FragColor.a = 1.0;
-		}
-	</script>
-
 </head>
 <body>
 	<header class="navbar navbar-fixed-top">
@@ -290,44 +38,25 @@ void main() {
 
 		<div class="page-header">
 			<h1>
-				Übung 2 <small>Implementierung von Toon Shading</small>
+				&Uuml;bung 2 <small>Simple Lighting</small>
 			</h1>
 		</div>
 
 
 		<div class="row">
 			<div class="span6">
-				<h2>Aufgabe</h2>
-				<p>TODO</p>
-				<h2>Lösungsansatz</h2>
-				<p>TODO</p>
-			</div>
-			<div class="span6">
-				<h2>Demo</h2>
-				<canvas id="canvas" width="500" height="500"></canvas>
-				<h2>Quellcode</h2>
-				<ul>
-					<li><a
-						href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung1/main.js"
-						target="_blank"> Geänderte main.js aus der WebGL Lesson 4 </a></li>
-					<li><a
-						href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung1/sphere.js"
-						target="_blank"> Die sphere.js mit algorithmus zum zerlegen
-							des Tetraeders. </a></li>
-				</ul>
-				<h2>Verwendete Resourcen</h2>
-				<ul>
-					<li><a href="https://github.com/toji/gl-matrix"
-						target="_blank">glMatrix Bibliothek</a>
-					</li>
-					<li><a href="http://learningwebgl.com/blog/?p=370"
-						target="_blank">4. Übung von Learning WebGL</a>
-					</li>
-					<li><a href="http://twitter.github.com/bootstrap/"
-						target="_blank">Bootstrap CSS für das Layout</a>
-					</li>
-				</ul>
-
+				<h2><a href="a31.html">&Uuml;bung 2.1</a></h2>
+				<p>
+					Allgemeine Implementierung von Toon Shading
+				</p>
+				<h2><a href="a32.html">&Uuml;bung 2.2</a></h2>
+				<p>
+					Toon Shading mit modifizierbaren Lichtquellen
+				</p>
+				<h2><a href="a33.html">&Uuml;bung 2.3</a></h2>
+				<p>
+					Toon Shading mit gepunkteter Oberfläche
+				</p>
 			</div>
 		</div>
 	</div>
