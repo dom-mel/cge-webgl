@@ -43,17 +43,14 @@ function initialize() {
 	var projection = mat4.create();
 	var view = mat4.create();
 	var model = mat4.create();
-
-	//model.b[5] = 0.0;
-//	model.b[6] = -1.0;
-//	model.b[9] = 1.0;
-//	model.b[10] = 0.0;
+	
 
 	// Uniforms for lighting.
 	var lightPosition = vec3.create([ 10, 10, 10 ]);
 	var lightIntensity = vec3.create([ 1, 1, 1 ]);
 	var color = vec3.create();
 
+	// Camera
 	var eyePosition = vec3.create();
 	var target = vec3.create();
 	var up = vec3.create([ 0, 1, 0 ]);
@@ -129,19 +126,21 @@ function initialize() {
 		for ( var xx = 0; xx < across; ++xx) {
 			for ( var yy = 0; yy < across; ++yy) {
 				for ( var zz = 0; zz < across; ++zz) {
-					mat4.translate(mat4.identity(torusPer.model), [ xx - half,
+					mat4.identity(torusPer.model);
+					var rightAngleRad = degToRad(90.0);
+					mat4.rotateX(torusPer.model, rightAngleRad);
+					mat4.rotateY(torusPer.model, rightAngleRad);
+					mat4.translate(torusPer.model, [ xx - half,
 							yy - half, zz - half ]);
 					torusPer.color[0] = xx / (across - 1);
 					torusPer.color[1] = yy / (across - 1);
 					torusPer.color[2] = zz / (across - 1);
 
-					// Actually render one sphere.
 					torus.draw(torusPer);
 				}
 			}
 		}
 	}
 
-	// Initial call to get the rendering started.
 	render();
 }
