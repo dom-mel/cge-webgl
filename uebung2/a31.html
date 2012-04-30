@@ -307,8 +307,9 @@ void main() {
 				<p>Grundsätzlich basiert Toon Shading auf dem <a href="http://de.wikipedia.org/wiki/Phong-Beleuchtungsmodell">Phong Beleuchtungsmodell</a>. Der Wesentliche Unterschied im Toon Shading ist, dass die berechnete Lichtintensität für ein Fragment diskretisiert wird, d.h. es gibt nur eine bestimmte Zahl an Abstufungen, anstelle eines glatten Farbverlaufs.</p>
 				<p>Um Toon Shading durchzuführen, wird zunächst für jedes Fragment die diffuse Beleuchtungskomponente durch Phong Shading berechnet. Anschließend wird dieser Wert so diskretisiert, dass er nur eine von vier Helligkeitsstufen annehmen kann. Hierfür wird der Gleitkommaanteil der berechneten diffusen Komponente abgeschnitten und das Ergebnis mit 0,25 multipliziert. Hierbei gilt es darauf zu achten, dass das Ergebnis nicht 0 wird, sondern mindestens 0,25, da sonst ein großteil des Modells schwarz wird.</p>
 				<p>Im letzten Schritt wird das Glanzlicht berechnet. Da dieses auch diskret sein soll, existieren nur zwei Fälle: ein Fragment reflektiert Glanzlicht, oder nicht. Um das zu berechnen, wird der Kosinus des Winkels zwischen dem an der Oberflächennormalen reflektierten Lichtstrahl und dem Blickwinkel des Betrachters ausgewertet. Erreicht der Kosinus einen gewissen Schwellwert, wird eine weitere Helligkeitsstufe auf den Wert der diffusen Komponente aufaddiert. Durch herabsetzen des Schwellwertes kann die Reflektivität des Materials erhöht werden.</p>
-				<img src="" />
 				<p></p>
+				<h2>Tastaturbelegung</h2>
+				<p>Mit den Tasten 0-4 lassen sich verschiedene Beleuchtungsmodelle auswählen, s.a. <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3">Beispiel von Prof. Dr. Henrik Tramberend</a>. Das Toonshading liegt auf der Taste 4 (standardmäßig aktiv).</p> 
 			</div>
 			<div class="span6">
 				<h2>Demo</h2>
