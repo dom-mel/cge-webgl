@@ -23,7 +23,8 @@
 	<script type="text/javascript" src="../lib/mathlib.js"></script>
 	<script type="text/javascript" src="../lib/util.js"></script>
 	
-	<script type="text/javascript" src="lit.js"></script>
+	<script type="text/javascript" src="light.js"></script>
+	<script type="text/javascript" src="lit2.js"></script>
 	
 	<script id="sphereVertexShader0" type="text/glsl">
 uniform mat4 projection;
@@ -211,7 +212,8 @@ void main() {
 		uniform mat4 view;
 		uniform mat4 model;
 
-		uniform vec3 lightPosition;
+		uniform vec3 light1Position;
+		uniform vec3 light2Position;
 		uniform vec3 eyePosition;
 
 		attribute vec4 position;
@@ -219,12 +221,14 @@ void main() {
 
 		varying vec3 normalW;
 		varying vec3 lightDirectionW;
+		varying vec3 lightDirectionW2;
 		varying vec3 eyeDirectionW;
 
 		void main() {
   			vec4 positionW = model * position;
   			normalW = (model * vec4(normal, 0.0)).xyz;
-  			lightDirectionW = lightPosition - positionW.xyz;
+  			lightDirectionW = light1Position - positionW.xyz;
+			lightDirectionW2 = light2Position - positionW.xyz;
   			eyeDirectionW = eyePosition - positionW.xyz;
   			gl_Position = projection * view * positionW;
 		}
@@ -234,10 +238,12 @@ void main() {
 		precision highp float;
 
 		uniform vec3 color;
-		uniform vec3 lightIntensity;
+		uniform vec3 light1Intensity;
+		uniform vec3 light2Intensity;
 
 		varying vec3 normalW;
 		varying vec3 lightDirectionW;
+		varying vec3 lightDirectionW2;
 		varying vec3 eyeDirectionW;
 
 		float step = 0.2;
@@ -252,16 +258,23 @@ void main() {
 			float diffuse = max(0.0, cosPhi(normal, light));
 			float discrete = max(step, floor(diffuse / step) * step);
 			vec3 reflection = normalize(reflect(-eye, normal));
-			float spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * step;
+			float spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * 0.5;
 			return reflectivity * intensity * discrete + spec;
 		}
 
 		void main() {
-			gl_FragColor.rgb = toon(
+			vec3 finalColor = vec3(0.0, 0.0, 0.0);
+			finalColor += toon(
     			normalize(normalW), 
     			normalize(eyeDirectionW), 
     			normalize(lightDirectionW), 
-    			lightIntensity, color);
+    			light1Intensity, color);
+			finalColor += toon(
+    			normalize(normalW), 
+    			normalize(eyeDirectionW), 
+    			normalize(lightDirectionW2), 
+    			light2Intensity, color);
+			gl_FragColor.rgb = finalColor;
 			gl_FragColor.a = 1.0;
 		}
 	</script>
@@ -302,14 +315,19 @@ void main() {
 		<div class="row">
 			<div class="span6">
 				<h2>Aufgabe</h2>
-				<p>Der Phong Shader aus <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3">dem Beispiel</a> soll so modifiziert werden, dass Farbabstufungen auf vier Stufen diskretisiert werden. Diesen Effekt nennt man Toon Shading, weil das Ergebnis eher wie eine Handzeichnung (also ein Cartoon) wirkt. Zusätzlich soll die Geometrie durch andere Objekte als Kugeln ersetzt werden.</p>
+				<p>TODO</p>
 				<h2>Lösungsansatz</h2>
-				<p>Grundsätzlich basiert Toon Shading auf dem <a href="http://de.wikipedia.org/wiki/Phong-Beleuchtungsmodell">Phong Beleuchtungsmodell</a>. Der Wesentliche Unterschied im Toon Shading ist, dass die berechnete Lichtintensität für ein Fragment diskretisiert wird, d.h. es gibt nur eine bestimmte Zahl an Abstufungen, anstelle eines glatten Farbverlaufs.</p>
-				<p>Um Toon Shading durchzuführen, wird zunächst für jedes Fragment die diffuse Beleuchtungskomponente durch Phong Shading berechnet. Anschließend wird dieser Wert so diskretisiert, dass er nur eine von vier Helligkeitsstufen annehmen kann. Hierfür wird der Gleitkommaanteil der berechneten diffusen Komponente abgeschnitten und das Ergebnis mit 0,25 multipliziert. Hierbei gilt es darauf zu achten, dass das Ergebnis nicht 0 wird, sondern mindestens 0,25, da sonst ein großteil des Modells schwarz wird.</p>
-				<p>Im letzten Schritt wird das Glanzlicht berechnet. Da dieses auch diskret sein soll, existieren nur zwei Fälle: ein Fragment reflektiert Glanzlicht, oder nicht. Um das zu berechnen, wird der Kosinus des Winkels zwischen dem an der Oberflächennormalen reflektierten Lichtstrahl und dem Blickwinkel des Betrachters ausgewertet. Erreicht der Kosinus einen gewissen Schwellwert, wird eine weitere Helligkeitsstufe auf den Wert der diffusen Komponente aufaddiert. Durch herabsetzen des Schwellwertes kann die Reflektivität des Materials erhöht werden.</p>
-				<p></p>
-				<h2>Tastaturbelegung</h2>
-				<p>Mit den Tasten 0-4 lassen sich verschiedene Beleuchtungsmodelle auswählen, s.a. <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3">Beispiel von Prof. Dr. Henrik Tramberend</a>. Das Toonshading liegt auf der Taste 4 (standardmäßig aktiv).</p> 
+				<p>TODO</p>
+				<h2>Lichtsteuerung</h2>
+				<form class="well">
+					<fieldset>
+						<legend>Lichtquelle #1</legend>
+						<div class="control-group">
+							<label class="checkbox" for="light1"><input type="checkbox" id="light1"/>&nbsp;Aktiviert</label>
+							<label class="control-label" for="color1">Farbe <input type="text" id="color1"/></label>
+						</div>
+					</fieldset>
+				</form>
 			</div>
 			<div class="span6">
 				<h2>Demo</h2>
@@ -325,14 +343,11 @@ void main() {
 					<li><a href="https://github.com/toji/gl-matrix"
 						target="_blank">glMatrix Bibliothek</a>
 					</li>
-					<li><a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3"
-						target="_blank">Beispiel von Prof. Dr. Henrik Tramberend für Phong Shading</a>
+					<li><a href="http://learningwebgl.com/blog/?p=370"
+						target="_blank">4. Übung von Learning WebGL</a>
 					</li>
 					<li><a href="http://twitter.github.com/bootstrap/"
 						target="_blank">Bootstrap CSS für das Layout</a>
-					</li>
-					<li><a href="http://code.google.com/p/threedlibrary/"
-						target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
 					</li>
 				</ul>
 
