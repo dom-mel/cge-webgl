@@ -13,6 +13,8 @@
 	<link href="../css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="../css/my.css" rel="stylesheet">
 	
+	<script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+	
 	<script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
 	<script type="text/javascript" src="../lib/webgl-utils.js"></script>
 	<script type="text/javascript" src="../lib/tdl/base.js"></script>
@@ -25,6 +27,7 @@
 	
 	<script type="text/javascript" src="light.js"></script>
 	<script type="text/javascript" src="lit2.js"></script>
+	<script type="text/javascript" src="ui.js"></script>
 	
 	<script id="sphereVertexShader0" type="text/glsl">
 uniform mat4 projection;
@@ -240,6 +243,8 @@ void main() {
 		uniform vec3 color;
 		uniform vec3 light1Intensity;
 		uniform vec3 light2Intensity;
+		uniform vec3 light1spec;
+		uniform vec3 light2spec;
 
 		varying vec3 normalW;
 		varying vec3 lightDirectionW;
@@ -254,11 +259,11 @@ void main() {
 		}
 
 		vec3 toon(vec3 normal, vec3 eye, vec3 light, 
-           		vec3 intensity, vec3 reflectivity) {
+           		vec3 intensity, vec3 reflectivity, vec3 specColor) {
 			float diffuse = max(0.0, cosPhi(normal, light));
 			float discrete = max(step, floor(diffuse / step) * step);
 			vec3 reflection = normalize(reflect(-eye, normal));
-			float spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * 0.5;
+			vec3 spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * 0.5 * specColor;
 			return reflectivity * intensity * discrete + spec;
 		}
 
@@ -268,12 +273,12 @@ void main() {
     			normalize(normalW), 
     			normalize(eyeDirectionW), 
     			normalize(lightDirectionW), 
-    			light1Intensity, color);
+    			light1Intensity, color, light1spec);
 			finalColor += toon(
     			normalize(normalW), 
     			normalize(eyeDirectionW), 
     			normalize(lightDirectionW2), 
-    			light2Intensity, color);
+    			light2Intensity, color, light2spec);
 			gl_FragColor.rgb = finalColor;
 			gl_FragColor.a = 1.0;
 		}
@@ -323,8 +328,17 @@ void main() {
 					<fieldset>
 						<legend>Lichtquelle #1</legend>
 						<div class="control-group">
-							<label class="checkbox" for="light1"><input type="checkbox" id="light1"/>&nbsp;Aktiviert</label>
-							<label class="control-label" for="color1">Farbe <input type="text" id="color1"/></label>
+							<label class="checkbox" for="light1" ><input type="checkbox" id="light1" onClick="toggleLight(1);" />&nbsp;Aktiviert</label>
+							<label class="control-label" for="color1">Farbe<input type="text" id="color1"/></label>
+							<label class="control-label" for="position1">Position<input type="text" id="position1"/></label>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>Lichtquelle #2</legend>
+						<div class="control-group">
+							<label class="checkbox" for="light2"><input type="checkbox" id="light2" onClick="toggleLight(2);" />&nbsp;Aktiviert</label>
+							<label class="control-label" for="color2">Farbe<input type="text" id="color2"/></label>
+							<label class="control-label" for="position2">Position<input type="text" id="position2"/></label>
 						</div>
 					</fieldset>
 				</form>

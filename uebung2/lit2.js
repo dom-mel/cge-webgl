@@ -15,6 +15,14 @@ function createProgramsFromTags() {
 // Registers an onload handler.
 window.onload = initialize;
 
+var light1 = new DirectionalLight(
+		vec3.create([ 10, 10, 10 ]),
+		vec3.create([ 1, 0, 0 ]));
+var light2 = new DirectionalLight(
+		vec3.create([ -10, -10, -10 ]),
+		vec3.create([ 0, 0, 1 ]));
+var torusConst;
+
 // The main entry point.
 function initialize() {
 	// Setup the canvas widget for WebGL.
@@ -49,13 +57,6 @@ function initialize() {
 //	var light2Position = vec3.create([ -10, -10, -10 ]);
 //	var light2Intensity = vec3.create([ 0, 0, 1 ]);
 	
-	var light1 = new DirectionalLight(
-			vec3.create([ 10, 10, 10 ]),
-			vec3.create([ 1, 0, 0 ]));
-	var light2 = new DirectionalLight(
-			vec3.create([ -10, -10, -10 ]),
-			vec3.create([ 0, 0, 1 ]));
-	
 	var color = vec3.create();
 
 	// Camera
@@ -75,14 +76,16 @@ function initialize() {
 	var clock = 0.0;
 
 	// Uniform variables that are the same for all sphere in one frame.
-	var torusConst = {
+	torusConst = {
 		view : view,
 		projection : projection,
 		eyePosition : eyePosition,
 		light1Position : light1.position,
 		light1Intensity : light1.intensity,
+		light1spec : light1.specular,
 		light2Position : light2.position,
 		light2Intensity : light2.intensity,
+		light2spec : light2.specular,
 		time : clock
 	};
 
