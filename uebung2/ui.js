@@ -15,10 +15,6 @@ function updateLightControls(number, light) {
 	$('#position'+number).attr('value', vec3toString(light.position));
 }
 
-function vec3toString(vector) {
-	return vector[0] + ', ' + vector[1] + ', ' + vector[2];
-}
-
 function vec3equals(a, b) {
 	if(a[0] == b[0] && a[1] == b[1] && a[2] == b[2]) {
 		return true;
@@ -40,4 +36,30 @@ function toggleLight(number) {
 	lights['light'+number].enable(status);
 	updateTorusConst();
 	updateLightControls(number, lights['light'+number]);
+}
+
+function setLightColor(number) {
+	var text = $('#color'+number).attr('value');
+	var color;
+	try {
+		color = vec3fromString(text);
+	} catch(error) {
+		// invalid input can be ignored
+		return;
+	}
+	lights['light'+number].intensity = color;
+	updateTorusConst();
+}
+
+function setLightPosition(number) {
+	var text = $('#position'+number).attr('value');
+	var position;
+	try {
+		position = vec3fromString(text);
+	}catch(error) {
+		// invalid input can be ignored
+		return;
+	}
+	lights['light'+number].position = position;
+	updateTorusConst();
 }
