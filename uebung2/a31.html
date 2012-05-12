@@ -242,7 +242,7 @@ void main() {
 		varying vec3 lightDirectionW;
 		varying vec3 eyeDirectionW;
 
-		float step = 0.2;
+		float step = 0.25;
 
 		// returns the cosinus of the angle between vectors a and b
 		float cosPhi(vec3 a, vec3 b) {
@@ -252,10 +252,10 @@ void main() {
 		vec3 toon(vec3 normal, vec3 eye, vec3 light, 
            		vec3 intensity, vec3 reflectivity) {
 			float diffuse = max(0.0, cosPhi(normal, light));
-			float discrete = max(step, floor(diffuse / step) * step);
+			float discrete = floor(diffuse / step) * step;
 			vec3 reflection = normalize(reflect(-eye, normal));
 			float spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * step;
-			return reflectivity * intensity * discrete + spec;
+			return reflectivity * vec3(0.25, 0.25, 0.25) + reflectivity * intensity * discrete + intensity * spec;
 		}
 
 		void main() {

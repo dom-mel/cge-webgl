@@ -17,10 +17,10 @@ window.onload = initialize;
 
 var light1 = new DirectionalLight(
 		vec3.create([ 10, 10, 10 ]),
-		vec3.create([ 1, 0, 0 ]));
+		vec3.create([ 0.5, 0, 0 ]));
 var light2 = new DirectionalLight(
 		vec3.create([ -10, -10, -10 ]),
-		vec3.create([ 0, 0, 1 ]));
+		vec3.create([ 0, 0, 0.5 ]));
 var torusConst;
 
 // The main entry point.
