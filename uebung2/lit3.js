@@ -73,13 +73,16 @@ function initialize() {
 		eyePosition : eyePosition,
 		lightPosition : lightPosition,
 		lightIntensity : lightIntensity,
-		time : clock
+		time : clock,
+        color: vec3.create([1,0,0]),
+        background: vec3.create([0,0,1]),
+        radius: 0.3,
+        density: 5
 	};
 
 	// Uniform variables that change for each sphere in a frame.
 	var torusPer = {
-		model : model,
-		color : color
+		model : model
 	};
 
 	// Renders one frame and registers itself for the next frame.
@@ -132,15 +135,28 @@ function initialize() {
 					mat4.rotateY(torusPer.model, rightAngleRad);
 					mat4.translate(torusPer.model, [ xx - half,
 							yy - half, zz - half ]);
-					torusPer.color[0] = xx / (across - 1);
-					torusPer.color[1] = yy / (across - 1);
-					torusPer.color[2] = zz / (across - 1);
-
 					torus.draw(torusPer);
 				}
 			}
 		}
 	}
 
-	render();
+    $('input#radius').change(function() {
+        torusConst.radius = $(this).val();
+    });
+
+    $('input#density').change(function() {
+        torusConst.density = $(this).val();
+    });
+
+
+    $('input#color').change(function() {
+        torusConst.color = vec3fromString($(this).val());
+    });
+
+    $('input#bgcolor').change(function() {
+        torusConst.background = vec3fromString($(this).val());
+    });
+
+    render();
 }
