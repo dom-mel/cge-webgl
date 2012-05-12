@@ -37,12 +37,15 @@
 
 		attribute vec4 position;
 		attribute vec3 normal;
+        attribute vec2 texCoord;
 
-		varying vec3 normalW;
+        varying vec2 texCoordI;
+        varying vec3 normalW;
 		varying vec3 lightDirectionW;
 		varying vec3 eyeDirectionW;
 
 		void main() {
+            texCoordI = texCoord;
   			vec4 positionW = model * position;
   			normalW = (model * vec4(normal, 0.0)).xyz;
   			lightDirectionW = lightPosition - positionW.xyz;
@@ -60,6 +63,7 @@
 		varying vec3 normalW;
 		varying vec3 lightDirectionW;
 		varying vec3 eyeDirectionW;
+        varying vec2 texCoordI;
 
 		float step = 0.2;
 
@@ -77,12 +81,33 @@
 			return reflectivity * intensity * discrete + spec;
 		}
 
+        vec3 getColor() {
+            float radius = 0.3;
+            vec2 middle = vec2(0.5, 0.5);
+            float density = 5.0;
+
+            radius = radius / density;
+            middle = middle / density;
+            float step = 1.0 / density;
+            middle = vec2(
+                    float(int(texCoordI.x/step)) * step + middle.x,
+                    float(int(texCoordI.y/step)) * step + middle.y
+            );
+
+            if (distance(texCoordI, middle) < radius) {
+                return vec3(1,0,0);
+            } else {
+                return vec3(0,0,1);
+            }
+        }
+
 		void main() {
+
 			gl_FragColor.rgb = toon(
     			normalize(normalW), 
     			normalize(eyeDirectionW), 
     			normalize(lightDirectionW), 
-    			lightIntensity, color);
+    			lightIntensity, getColor());
 			gl_FragColor.a = 1.0;
 		}
 	</script>

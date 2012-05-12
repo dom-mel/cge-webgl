@@ -26,8 +26,8 @@ function initialize() {
 	var frag = window.location.hash.substring(1);
 	var pnum = frag ? parseInt(frag) : 0;
 
-	var torus = new tdl.models.Model(programs[0], tdl.primitives
-			.createTorus(0.28, 0.16, 32, 32));
+	var torus = new tdl.models.Model(programs[0], tdl.primitives.createCube(0.5));
+			//.createTorus(0.28, 0.16, 32, 32));
 
 	// Register a keypress-handler for shader program switching using the number
 	// keys.
