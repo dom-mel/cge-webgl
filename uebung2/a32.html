@@ -264,14 +264,14 @@ void main() {
 		vec3 toon(vec3 normal, vec3 eye, vec3 light, 
            		vec3 intensity, vec3 reflectivity) {
 			float diffuse = max(0.0, cosPhi(normal, light));
-			float discrete = floor(diffuse / step) * step;
+			float discrete = floor(diffuse / step) * step - 0.25;
 			vec3 reflection = normalize(reflect(-eye, normal));
-			float spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * step * 2.0;
-			return reflectivity * intensity * discrete + intensity * spec;
+			vec3 spec = intensity * floor(max(0.0, cosPhi(reflection, light)) + step/2.0);
+			return reflectivity * intensity * discrete + spec;
 		}
 
 		void main() {
-			vec3 finalColor = vec3(0.0, 0.0, 0.0);
+			vec3 finalColor = vec3(0.25, 0.25, 0.25);
 			finalColor += toon(
     			normalize(normalW), 
     			normalize(eyeDirectionW), 
@@ -282,11 +282,7 @@ void main() {
     			normalize(eyeDirectionW), 
     			normalize(lightDirectionW2), 
     			light2Intensity, color);
-			if(finalColor.rgb == 0.0) {
-				gl_FragColor.rgb = vec3(0.1, 0.1, 0.1) * color;
-			} else {
-				gl_FragColor.rgb = finalColor;
-			}
+			gl_FragColor.rgb = finalColor;
 			gl_FragColor.a = 1.0;
 		}
 	</script>
@@ -327,10 +323,14 @@ void main() {
 		<div class="row">
 			<div class="span6">
 				<h2>Aufgabe</h2>
-				<p>TODO</p>
+				<p>Der Toon Shader aus <a href="a31.html">Aufgabe 2.1</a> soll so modifiziert werden, dass unterschiedliche, unabhängige Lichtquellen zum Einsatz kommen. Farbe und Position der Lichtquellen sollen veränderbar sein.</p>
 				<h2>Lösungsansatz</h2>
-				<p>TODO</p>
-				<h2>Lichtsteuerung</h2>
+				<p>Der in Aufgabe 2.1 bereits implementierte Toon Shader wird weitgehend übernommen und um die Möglichkeit erweitert, mehrere Lichtquellen gleichzeitig zu berechnen. Hierzu wird der Intensitätswert für alle Lichtquellen separat berechnet. Anschließend werden alle Werte aufsummiert. So wird ein mischen der Lichtfarben erreicht, sofern beide das selbe Fragment treffen.</p>
+				<p>Die Lichtquellen werden über ein HTML Formular (<a href="#lightControl">s.u.</a>) per JavaScript gesteuert und durch Uniform Variablen an den Shader übergeben.</p>
+				<h2>Beobachtungen</h2>
+				<p>Die Beleuchtung von weißen Objekten mit farbigem Licht hat den Effekt, dass bei hohen Beleuchtungsintensitäten (z.B. intensives Rot: [1.0; 0.0; 0.0]) die Glanzlichter zu verschwinden scheinen. Das kommt daher, dass die Glanzlichter die Farbe der Lichtquelle haben und die Farbintensität nicht über das Maximum erhöht werden kann. Wäre die Lichtquelle weiß und die Objekte farbig, würden die Glanzlichter besser zur Geltung kommen.</p>
+				<h2 id="lightControl">Lichtsteuerung</h2>
+				<p><small>Eingabe von Vektoren: Komponenten durch Semikolon trennen. Werte werden sofort nach der Eingabe automatisch übernommen.</small></p>
 				<form class="well">
 					<fieldset>
 						<legend>Lichtquelle #1</legend>
@@ -356,8 +356,10 @@ void main() {
 				<h2>Quellcode</h2>
 				<ul>
 					<li><a
-						href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/a31.html#L233"
-						target="_blank"> Toon Shader GLSL Quellcode </a></li>
+						href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/a32.html#L273"
+						target="_blank"> Modifizierter Toon Shader GLSL Quellcode für mehrere Lichtquellen </a></li>
+					<li><a href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/lit2.js#L18"
+						   target="blank"> Modifiziertes JavaScript für mehrere Lichtquellen </a></li>
 				</ul>
 				<h2>Verwendete Resourcen</h2>
 				<ul>
