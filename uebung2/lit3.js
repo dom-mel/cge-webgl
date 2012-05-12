@@ -141,6 +141,7 @@ function initialize() {
 		}
 	}
 
+    // add controls
     $('input#radius').change(function() {
         torusConst.radius = $(this).val();
     });

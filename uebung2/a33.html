@@ -26,7 +26,7 @@
 	<script type="text/javascript" src="../lib/util.js"></script>
 	
 	<script type="text/javascript" src="lit3.js"></script>
-	
+
 	<script id="sphereVertexShader0" type="text/glsl">
 		uniform mat4 projection;
 		uniform mat4 view;
@@ -103,7 +103,6 @@
         }
 
 		void main() {
-
 			gl_FragColor.rgb = toon(
     			normalize(normalW), 
     			normalize(eyeDirectionW), 
@@ -149,10 +148,98 @@
 		<div class="row">
 			<div class="span6">
 				<h2>Aufgabe</h2>
-				<p></p>
+				<p>
+                    Der Toonshader aus <a href="a31.html">Aufgabe 2.1</a> soll so verändert werden,
+                    dass die Oberfläche mit Punkten übersät ist.
+                    Farben, Radius und Dichte sollen dabei beliebig einstellbar sein.
+                </p>
 				<h2>Lösungsansatz</h2>
-				<p></p>
-				<h2>Tastaturbelegung</h2>
+				<p>
+                    Die Idee beruht darauf, die konstante Farbe des Toonshaders durch eine Funktion auszutauschen.
+                    Diese bestimmt, anhand der Texturkoordinate, welche Farbe für den aktuellen Punkt verwendet werden soll.
+				</p>
+                <p>
+                    Um die Farbe zu bestimmen muss ermittelt werden,
+                    ob ein Punkt innerhalb oder außerhalb des Kreises liegt.
+                    Der Einfachheit halber wird zunächst lediglich ein Kreis mit den folgenden Eigenschaften betrachtet:
+                    Radius <span class="math">r = 0.5</span>, Mittelpunkt <span class="math">m = (0.5, 0.5)</span>.
+                    Um nun zu bestimmen ob ein Punkt <span class="math">p</span> innerhalb des Kreises liegt,
+                    berechnen wir die Distanz <span class="math">d = | m - p |</span>.
+                    Wenn <span class="math">d > r</span> ist befindet sich der Punkt außerhalb des Kreises,
+                    andernfalls innerhalb. Siehe hierzu auch Abbildung 1.
+                    In der GLSL kann die Distanz mit der <span class="math">distance</span> Funktion errechnet werden.
+                </p>
+                <p>
+                    Als nächsten Schritt wird die Dichte <span class="math">D</span> eingeführt.
+                    Sie bestimmt die Anzahl der Kreise auf der Oberfläche.
+                    Das Texturkoordinatensystem muss nun anhand von <span class="math">D</span> unterteilet werden.
+                    Das Koordinatensystem ist wie folgt aufgebaut: Breite <span class="math">x</span> = Höhe <span class="math">y</span>.
+                    Es wird nun in kleinere Quadrate mit der Breite <span class="math">lx</span> und der Höhe <span class="math">ly</span> unterteilet,
+                    wobei gilt <span class="math">lx = ly = x/D = y/D</span>.
+                    Zunächst verkleinern wir den Radius <span class="math">lr</span> eines einzelnen Kreises um <span class="math">r/D</span>.
+                    Um nun den Mittelpunkt lm des Kreises zu bekommen,
+                    welcher mit <span class="math">p</span> in einem Quadranten liegt wird folgendes berechnet:
+                    <span class="math">lm = m/D + int(p/lx)</span>.
+                    Nun kann wieder anhand der Distanz <span class="math">d</span> zwischen <span class="math">lm</span>
+                    und mit <span class="math">lr</span> prüfen ob der Punkt sich auf im Kreis befindet.
+                    Siehe hierzu auch Abbildung 2.
+                </p>
+                <ul class="thumbnails">
+                    <li class="span3">
+                        <div class="thumbnail">
+                            <img src="img3_1.jpg" style="width: 200px;" alt="Zerlegung des Dreieckes" title="Abbildung 1" />
+                            <div class="caption">
+                                <h5>Abbildung 1</h5>
+                                <p>Kreis auf Oberfläche.</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="span3">
+                        <div class="thumbnail">
+                            <img src="img3_2.jpg" style="width: 200px;" alt="Verschiebung eines Punktes auf die Kreis
+                        Oberfläche" title="Abbildung 2" />
+                            <div class="caption">
+                                <h5>Abbildung 2</h5>
+                                <p>
+                                    Zerlegung der Oberfläche.
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <h2>Verwendete Resourcen</h2>
+                <ul>
+                    <li><a href="https://github.com/toji/gl-matrix"
+                           target="_blank">glMatrix Bibliothek</a>
+                    </li>
+                    <li><a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3"
+                           target="_blank">Beispiel von Prof. Dr. Henrik Tramberend für Phong Shading</a>
+                    </li>
+                    <li><a href="http://twitter.github.com/bootstrap/"
+                           target="_blank">Bootstrap CSS für das Layout</a>
+                    </li>
+                    <li><a href="http://code.google.com/p/threedlibrary/"
+                           target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
+                    </li>
+                    <li>
+                        <a href="http://jquery.org/" target="_blank">
+                            JQuery
+                        </a>
+                    </li>
+                </ul>
+                <h2>Quellcode</h2>
+                <ul>
+                    <li>
+                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung2/lit3.js" target="_blank">
+                            JavaScript Programm lit3.js
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung2/a33.html" target="_blank">
+                            Diese HTML Seite. Shader befinden sich im Header.
+                        </a>
+                    </li>
+                </ul>
 			</div>
 			<div class="span6">
 				<h2>Demo</h2>
@@ -187,25 +274,6 @@
                         </div>
                     </fieldset>
                 </form>
-
-				<h2>Quellcode</h2>
-				<ul>
-				</ul>
-				<h2>Verwendete Resourcen</h2>
-				<ul>
-					<li><a href="https://github.com/toji/gl-matrix"
-						target="_blank">glMatrix Bibliothek</a>
-					</li>
-					<li><a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3"
-						target="_blank">Beispiel von Prof. Dr. Henrik Tramberend für Phong Shading</a>
-					</li>
-					<li><a href="http://twitter.github.com/bootstrap/"
-						target="_blank">Bootstrap CSS für das Layout</a>
-					</li>
-					<li><a href="http://code.google.com/p/threedlibrary/"
-						target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
-					</li>
-				</ul>
 			</div>
 		</div>
 	</div>
