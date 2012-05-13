@@ -1,37 +1,37 @@
 <!Doctype html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-	<title>Toon Shading</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link href="../css/bootstrap.css" rel="stylesheet">
-	<style type="text/css">
-	body {
-		padding-top: 60px;
-		padding-bottom: 40px;
-	}
-	</style>
-	
-	<link href="../css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="../css/my.css" rel="stylesheet">
-	
-	<script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+    <title>Toon Shading</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+    </style>
+
+    <link href="../css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../css/my.css" rel="stylesheet">
+
+    <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
     <script src="../js/bootstrap.js" type="text/javascript"></script>
-	
-	<script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
-	<script type="text/javascript" src="../lib/webgl-utils.js"></script>
-	<script type="text/javascript" src="../lib/tdl/base.js"></script>
-	<script type="text/javascript" src="../lib/tdl/webgl.js"></script>
-	<script type="text/javascript" src="../lib/tdl/models.js"></script>
-	<script type="text/javascript" src="../lib/tdl/primitives.js"></script>
-	<script type="text/javascript" src="../lib/tdl/programs.js"></script>
-	<script type="text/javascript" src="../lib/mathlib.js"></script>
-	<script type="text/javascript" src="../lib/util.js"></script>
-	
-	<script type="text/javascript" src="light.js"></script>
-	<script type="text/javascript" src="lit2.js"></script>
-	<script type="text/javascript" src="ui.js"></script>
-	
-	<script id="sphereVertexShader0" type="text/glsl">
+
+    <script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
+    <script type="text/javascript" src="../lib/webgl-utils.js"></script>
+    <script type="text/javascript" src="../lib/tdl/base.js"></script>
+    <script type="text/javascript" src="../lib/tdl/webgl.js"></script>
+    <script type="text/javascript" src="../lib/tdl/models.js"></script>
+    <script type="text/javascript" src="../lib/tdl/primitives.js"></script>
+    <script type="text/javascript" src="../lib/tdl/programs.js"></script>
+    <script type="text/javascript" src="../lib/mathlib.js"></script>
+    <script type="text/javascript" src="../lib/util.js"></script>
+
+    <script type="text/javascript" src="light.js"></script>
+    <script type="text/javascript" src="lit2.js"></script>
+    <script type="text/javascript" src="ui.js"></script>
+
+    <script id="sphereVertexShader0" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -42,9 +42,9 @@ attribute vec3 normal;
 void main() {
   gl_Position = projection * view * model * position;
 }
-	</script>
-	
-	<script id="sphereFragmentShader0" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader0" type="text/glsl">
 precision highp float;
 
 uniform vec3 color;
@@ -53,11 +53,11 @@ void main() {
   gl_FragColor.rgb = 0.7 * color;
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<!-- Lambert lighting model, Gouraud shading -->
-	
-	<script id="sphereVertexShader1" type="text/glsl">
+    </script>
+
+    <!-- Lambert lighting model, Gouraud shading -->
+
+    <script id="sphereVertexShader1" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -72,7 +72,7 @@ attribute vec3 normal;
 
 varying vec3 intensity;
 
-vec3 lambert(vec3 normal, vec3 light, 
+vec3 lambert(vec3 normal, vec3 light,
              vec3 intensity, vec3 reflectivity) {
   return 0.1 * reflectivity * intensity +
          0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
@@ -86,9 +86,9 @@ void main() {
   intensity = lambert(normalW, lightDirectionW, lightIntensity, color);
   gl_Position = projection * view * positionW;
 }
-	</script>
-	
-	<script id="sphereFragmentShader1" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader1" type="text/glsl">
 precision highp float;
 
 varying vec3 intensity;
@@ -97,11 +97,11 @@ void main() {
   gl_FragColor.rgb = intensity;
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<!-- Phong lighting model, Gouraud shading -->
-	
-	<script id="sphereVertexShader2" type="text/glsl">
+    </script>
+
+    <!-- Phong lighting model, Gouraud shading -->
+
+    <script id="sphereVertexShader2" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -116,16 +116,16 @@ attribute vec3 normal;
 
 varying vec3 intensity;
 
-vec3 lambert(vec3 normal, vec3 light, 
+vec3 lambert(vec3 normal, vec3 light,
              vec3 intensity, vec3 reflectivity) {
   return 0.1 * reflectivity * intensity +
          0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
 }
 
-vec3 phong(vec3 normal, vec3 eye, vec3 light, 
+vec3 phong(vec3 normal, vec3 eye, vec3 light,
            vec3 intensity, vec3 reflectivity) {
   return lambert(normal, light, intensity, reflectivity) +
-         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal), 
+         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal),
                                       light)), 10.0);
 }
 
@@ -135,13 +135,13 @@ void main() {
   vec3 lightDirectionW = normalize(lightPosition - positionW.xyz);
   vec3 eyeDirectionW = normalize(eyePosition - positionW.xyz);
 
-  intensity = phong(normalW, eyeDirectionW, lightDirectionW, 
+  intensity = phong(normalW, eyeDirectionW, lightDirectionW,
                     lightIntensity, color);
   gl_Position = projection * view * positionW;
 }
-	</script>
-	
-	<script id="sphereFragmentShader2" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader2" type="text/glsl">
 precision highp float;
 
 varying vec3 intensity;
@@ -150,11 +150,11 @@ void main() {
   gl_FragColor.rgb = intensity;
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<!-- Phong lighting model, Phong shading -->
-	
-	<script id="sphereVertexShader3" type="text/glsl">
+    </script>
+
+    <!-- Phong lighting model, Phong shading -->
+
+    <script id="sphereVertexShader3" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -177,9 +177,9 @@ void main() {
 
   gl_Position = projection * view * positionW;
 }
-	</script>
-	
-	<script id="sphereFragmentShader3" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader3" type="text/glsl">
 precision highp float;
 
 uniform vec3 color;
@@ -189,193 +189,193 @@ varying vec3 normalW;
 varying vec3 lightDirectionW;
 varying vec3 eyeDirectionW;
 
-vec3 lambert(vec3 normal, vec3 light, 
+vec3 lambert(vec3 normal, vec3 light,
              vec3 intensity, vec3 reflectivity) {
   return 0.1 * reflectivity * intensity +
          0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
 }
 
-vec3 phong(vec3 normal, vec3 eye, vec3 light, 
+vec3 phong(vec3 normal, vec3 eye, vec3 light,
            vec3 intensity, vec3 reflectivity) {
   return lambert(normal, light, intensity, reflectivity) +
-         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal), 
+         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal),
                                       light)), 10.0);
 }
 
 void main() {
   gl_FragColor.rgb = phong(
-    normalize(normalW), 
-    normalize(eyeDirectionW), 
-    normalize(lightDirectionW), 
+    normalize(normalW),
+    normalize(eyeDirectionW),
+    normalize(lightDirectionW),
     lightIntensity, color);
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<script id="sphereVertexShader4" type="text/glsl">
-		uniform mat4 projection;
-		uniform mat4 view;
-		uniform mat4 model;
+    </script>
 
-		uniform vec3 light1Position;
-		uniform vec3 light2Position;
-		uniform vec3 eyePosition;
+    <script id="sphereVertexShader4" type="text/glsl">
+        uniform mat4 projection;
+        uniform mat4 view;
+        uniform mat4 model;
 
-		attribute vec4 position;
-		attribute vec3 normal;
+        uniform vec3 light1Position;
+        uniform vec3 light2Position;
+        uniform vec3 eyePosition;
 
-		varying vec3 normalW;
-		varying vec3 lightDirectionW;
-		varying vec3 lightDirectionW2;
-		varying vec3 eyeDirectionW;
+        attribute vec4 position;
+        attribute vec3 normal;
 
-		void main() {
-  			vec4 positionW = model * position;
-  			normalW = (model * vec4(normal, 0.0)).xyz;
-  			lightDirectionW = light1Position - positionW.xyz;
-			lightDirectionW2 = light2Position - positionW.xyz;
-  			eyeDirectionW = eyePosition - positionW.xyz;
-  			gl_Position = projection * view * positionW;
-		}
-	</script>
-	
-	<script id="sphereFragmentShader4" type="text/glsl">
-		precision highp float;
+        varying vec3 normalW;
+        varying vec3 lightDirectionW;
+        varying vec3 lightDirectionW2;
+        varying vec3 eyeDirectionW;
 
-		uniform vec3 color;
-		uniform vec3 light1Intensity;
-		uniform vec3 light2Intensity;
-		uniform vec3 light1spec;
-		uniform vec3 light2spec;
+        void main() {
+            vec4 positionW = model * position;
+            normalW = (model * vec4(normal, 0.0)).xyz;
+            lightDirectionW = light1Position - positionW.xyz;
+            lightDirectionW2 = light2Position - positionW.xyz;
+            eyeDirectionW = eyePosition - positionW.xyz;
+            gl_Position = projection * view * positionW;
+        }
+    </script>
 
-		varying vec3 normalW;
-		varying vec3 lightDirectionW;
-		varying vec3 lightDirectionW2;
-		varying vec3 eyeDirectionW;
+    <script id="sphereFragmentShader4" type="text/glsl">
+        precision highp float;
 
-		// the number of shades of the same color for light intensity
-		float step = 0.25;
+        uniform vec3 color;
+        uniform vec3 light1Intensity;
+        uniform vec3 light2Intensity;
+        uniform vec3 light1spec;
+        uniform vec3 light2spec;
 
-		// returns the cosinus of the angle between vectors a and b
-		float cosPhi(vec3 a, vec3 b) {
-			return dot(a, b) / (length(a) * length(b));
-		}
+        varying vec3 normalW;
+        varying vec3 lightDirectionW;
+        varying vec3 lightDirectionW2;
+        varying vec3 eyeDirectionW;
 
-		vec3 toon(vec3 normal, vec3 eye, vec3 light, 
-           		vec3 intensity, vec3 reflectivity) {
-			float diffuse = max(0.0, cosPhi(normal, light));
-			float discrete = floor(diffuse / step) * step - 0.25;
-			vec3 reflection = normalize(reflect(-eye, normal));
-			vec3 spec = intensity * floor(max(0.0, cosPhi(reflection, light)) + step/2.0);
-			return reflectivity * intensity * discrete + spec;
-		}
+        // the number of shades of the same color for light intensity
+        float step = 0.25;
 
-		void main() {
-			vec3 finalColor = vec3(0.25, 0.25, 0.25);
-			finalColor += toon(
-    			normalize(normalW), 
-    			normalize(eyeDirectionW), 
-    			normalize(lightDirectionW), 
-    			light1Intensity, color);
-			finalColor += toon(
-    			normalize(normalW), 
-    			normalize(eyeDirectionW), 
-    			normalize(lightDirectionW2), 
-    			light2Intensity, color);
-			gl_FragColor.rgb = finalColor;
-			gl_FragColor.a = 1.0;
-		}
-	</script>
+        // returns the cosinus of the angle between vectors a and b
+        float cosPhi(vec3 a, vec3 b) {
+            return dot(a, b) / (length(a) * length(b));
+        }
+
+        vec3 toon(vec3 normal, vec3 eye, vec3 light,
+                vec3 intensity, vec3 reflectivity) {
+            float diffuse = max(0.0, cosPhi(normal, light));
+            float discrete = floor(diffuse / step) * step - 0.25;
+            vec3 reflection = normalize(reflect(-eye, normal));
+            vec3 spec = intensity * floor(max(0.0, cosPhi(reflection, light)) + step/2.0);
+            return reflectivity * intensity * discrete + spec;
+        }
+
+        void main() {
+            vec3 finalColor = vec3(0.25, 0.25, 0.25);
+            finalColor += toon(
+                normalize(normalW),
+                normalize(eyeDirectionW),
+                normalize(lightDirectionW),
+                light1Intensity, color);
+            finalColor += toon(
+                normalize(normalW),
+                normalize(eyeDirectionW),
+                normalize(lightDirectionW2),
+                light2Intensity, color);
+            gl_FragColor.rgb = finalColor;
+            gl_FragColor.a = 1.0;
+        }
+    </script>
 
 </head>
 <body>
-	<header class="navbar navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse"
-					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> </a> <a
-					class="brand" href="../index.html">Computer Graphics and
-					Effects</a>
-				<div class="nav-collapse">
-					<ul class="nav">
-						<li><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a>
-						</li>
-						<li class="active"><a href="../uebung2/index.html">&Uuml;bung&nbsp;2</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</header>
+    <header class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse"
+                    data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> </a> <a
+                    class="brand" href="../index.html">Computer Graphics and
+                    Effects</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a>
+                        </li>
+                        <li class="active"><a href="../uebung2/index.html">&Uuml;bung&nbsp;2</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
 
-	<div class="container">
+    <div class="container">
 
-		<div class="page-header">
-			<h1>
-				&Uuml;bung 2.1 <small>Implementierung von Toon Shading</small>
-			</h1>
-			<br/>
-			<a href="index.html">Zur&uuml;ck zur &Uuml;bersicht</a>
-		</div>
+        <div class="page-header">
+            <h1>
+                &Uuml;bung 2.1 <small>Implementierung von Toon Shading</small>
+            </h1>
+            <br/>
+            <a href="index.html">Zur&uuml;ck zur &Uuml;bersicht</a>
+        </div>
 
 
-		<div class="row">
-			<div class="span6">
-				<h2>Aufgabe</h2>
-				<p>Der Toon Shader aus <a href="a31.html">Aufgabe 2.1</a> soll so modifiziert werden, dass unterschiedliche, unabhängige Lichtquellen zum Einsatz kommen. Farbe und Position der Lichtquellen sollen veränderbar sein.</p>
-				<h2>Lösungsansatz</h2>
-				<p>Der in Aufgabe 2.1 bereits implementierte Toon Shader wird weitgehend übernommen und um die Möglichkeit erweitert, mehrere Lichtquellen gleichzeitig zu berechnen. Hierzu wird der Intensitätswert für alle Lichtquellen separat berechnet. Anschließend werden alle Werte aufsummiert. So wird ein mischen der Lichtfarben erreicht, sofern beide das selbe Fragment treffen.</p>
-				<p>Die Lichtquellen werden über ein HTML Formular (<a href="#lightControl">s.u.</a>) per JavaScript gesteuert und durch Uniform Variablen an den Shader übergeben.</p>
-				<h2>Beobachtungen</h2>
-				<p>Die Beleuchtung von weißen Objekten mit farbigem Licht hat den Effekt, dass bei hohen Beleuchtungsintensitäten (z.B. intensives Rot: [1.0; 0.0; 0.0]) die Glanzlichter zu verschwinden scheinen. Das kommt daher, dass die Glanzlichter die Farbe der Lichtquelle haben und die Farbintensität nicht über das Maximum erhöht werden kann. Wäre die Lichtquelle weiß und die Objekte farbig, würden die Glanzlichter besser zur Geltung kommen.</p>
-				<h2 id="lightControl">Lichtsteuerung</h2>
-				<p><small>Eingabe von Vektoren: Komponenten durch Semikolon trennen. Werte werden sofort nach der Eingabe automatisch übernommen.</small></p>
-				<form class="well">
-					<fieldset>
-						<legend>Lichtquelle #1</legend>
-						<div class="control-group">
-							<label class="checkbox" for="light1" ><input type="checkbox" id="light1" onclick="toggleLight(1);" />&nbsp;Aktiviert</label>
-							<label class="control-label" for="color1">Farbe</label><input type="text" id="color1" onkeyup="setLightColor(1);" />
-							<label class="control-label" for="position1">Position</label><input type="text" id="position1" onkeyup="setLightPosition(1);"/>
-						</div>
-					</fieldset>
-					<fieldset>
-						<legend>Lichtquelle #2</legend>
-						<div class="control-group">
-							<label class="checkbox" for="light2"><input type="checkbox" id="light2" onclick="toggleLight(2);" />&nbsp;Aktiviert</label>
-							<label class="control-label" for="color2">Farbe<input type="text" id="color2" onkeyup="setLightColor(2);" /></label>
-							<label class="control-label" for="position2">Position</label><input type="text" id="position2" onkeyup="setLightPosition(2);"/>
-						</div>
-					</fieldset>
-				</form>
-			</div>
-			<div class="span6">
-				<h2>Demo</h2>
-				<canvas id="canvas" width="500" height="500"></canvas>
-				<h2>Quellcode</h2>
-				<ul>
-					<li><a
-						href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/a32.html#L273"
-						target="_blank"> Modifizierter Toon Shader GLSL Quellcode für mehrere Lichtquellen </a></li>
-					<li><a href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/lit2.js#L18"
-						   target="blank"> Modifiziertes JavaScript für mehrere Lichtquellen </a></li>
-				</ul>
-				<h2>Verwendete Resourcen</h2>
-				<ul>
-					<li><a href="https://github.com/toji/gl-matrix"
-						target="_blank">glMatrix Bibliothek</a>
-					</li>
-					<li><a href="http://learningwebgl.com/blog/?p=370"
-						target="_blank">4. Übung von Learning WebGL</a>
-					</li>
-					<li><a href="http://twitter.github.com/bootstrap/"
-						target="_blank">Bootstrap CSS für das Layout</a>
-					</li>
-				</ul>
+        <div class="row">
+            <div class="span6">
+                <h2>Aufgabe</h2>
+                <p>Der Toon Shader aus <a href="a31.html">Aufgabe 2.1</a> soll so modifiziert werden, dass unterschiedliche, unabhängige Lichtquellen zum Einsatz kommen. Farbe und Position der Lichtquellen sollen veränderbar sein.</p>
+                <h2>Lösungsansatz</h2>
+                <p>Der in Aufgabe 2.1 bereits implementierte Toon Shader wird weitgehend übernommen und um die Möglichkeit erweitert, mehrere Lichtquellen gleichzeitig zu berechnen. Hierzu wird der Intensitätswert für alle Lichtquellen separat berechnet. Anschließend werden alle Werte aufsummiert. So wird ein mischen der Lichtfarben erreicht, sofern beide das selbe Fragment treffen.</p>
+                <p>Die Lichtquellen werden über ein HTML Formular (<a href="#lightControl">s.u.</a>) per JavaScript gesteuert und durch Uniform Variablen an den Shader übergeben.</p>
+                <h2>Beobachtungen</h2>
+                <p>Die Beleuchtung von weißen Objekten mit farbigem Licht hat den Effekt, dass bei hohen Beleuchtungsintensitäten (z.B. intensives Rot: [1.0; 0.0; 0.0]) die Glanzlichter zu verschwinden scheinen. Das kommt daher, dass die Glanzlichter die Farbe der Lichtquelle haben und die Farbintensität nicht über das Maximum erhöht werden kann. Wäre die Lichtquelle weiß und die Objekte farbig, würden die Glanzlichter besser zur Geltung kommen.</p>
+                <h2 id="lightControl">Lichtsteuerung</h2>
+                <p><small>Eingabe von Vektoren: Komponenten durch Semikolon trennen. Werte werden sofort nach der Eingabe automatisch übernommen.</small></p>
+                <form class="well">
+                    <fieldset>
+                        <legend>Lichtquelle #1</legend>
+                        <div class="control-group">
+                            <label class="checkbox" for="light1" ><input type="checkbox" id="light1" onclick="toggleLight(1);" />&nbsp;Aktiviert</label>
+                            <label class="control-label" for="color1">Farbe</label><input type="text" id="color1" onkeyup="setLightColor(1);" />
+                            <label class="control-label" for="position1">Position</label><input type="text" id="position1" onkeyup="setLightPosition(1);"/>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Lichtquelle #2</legend>
+                        <div class="control-group">
+                            <label class="checkbox" for="light2"><input type="checkbox" id="light2" onclick="toggleLight(2);" />&nbsp;Aktiviert</label>
+                            <label class="control-label" for="color2">Farbe<input type="text" id="color2" onkeyup="setLightColor(2);" /></label>
+                            <label class="control-label" for="position2">Position</label><input type="text" id="position2" onkeyup="setLightPosition(2);"/>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="span6">
+                <h2>Demo</h2>
+                <canvas id="canvas" width="500" height="500"></canvas>
+                <h2>Quellcode</h2>
+                <ul>
+                    <li><a
+                        href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/a32.html#L273"
+                        target="_blank"> Modifizierter Toon Shader GLSL Quellcode für mehrere Lichtquellen </a></li>
+                    <li><a href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/lit2.js#L18"
+                           target="blank"> Modifiziertes JavaScript für mehrere Lichtquellen </a></li>
+                </ul>
+                <h2>Verwendete Resourcen</h2>
+                <ul>
+                    <li><a href="https://github.com/toji/gl-matrix"
+                        target="_blank">glMatrix Bibliothek</a>
+                    </li>
+                    <li><a href="http://learningwebgl.com/blog/?p=370"
+                        target="_blank">4. Übung von Learning WebGL</a>
+                    </li>
+                    <li><a href="http://twitter.github.com/bootstrap/"
+                        target="_blank">Bootstrap CSS für das Layout</a>
+                    </li>
+                </ul>
 
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

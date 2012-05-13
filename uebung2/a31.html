@@ -1,33 +1,33 @@
 <!Doctype html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-	<title>Toon Shading</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link href="../css/bootstrap.css" rel="stylesheet">
-	<style type="text/css">
-	body {
-		padding-top: 60px;
-		padding-bottom: 40px;
-	}
-	</style>
-	<link href="../css/bootstrap-responsive.css" rel="stylesheet">
-	<link href="../css/my.css" rel="stylesheet">
+    <title>Toon Shading</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+    </style>
+    <link href="../css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="../css/my.css" rel="stylesheet">
     <script src="../js/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="../js/bootstrap.js" type="text/javascript"></script>
-	
-	<script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
-	<script type="text/javascript" src="../lib/webgl-utils.js"></script>
-	<script type="text/javascript" src="../lib/tdl/base.js"></script>
-	<script type="text/javascript" src="../lib/tdl/webgl.js"></script>
-	<script type="text/javascript" src="../lib/tdl/models.js"></script>
-	<script type="text/javascript" src="../lib/tdl/primitives.js"></script>
-	<script type="text/javascript" src="../lib/tdl/programs.js"></script>
-	<script type="text/javascript" src="../lib/mathlib.js"></script>
-	<script type="text/javascript" src="../lib/util.js"></script>
-	
-	<script type="text/javascript" src="lit.js"></script>
-	
-	<script id="sphereVertexShader0" type="text/glsl">
+
+    <script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
+    <script type="text/javascript" src="../lib/webgl-utils.js"></script>
+    <script type="text/javascript" src="../lib/tdl/base.js"></script>
+    <script type="text/javascript" src="../lib/tdl/webgl.js"></script>
+    <script type="text/javascript" src="../lib/tdl/models.js"></script>
+    <script type="text/javascript" src="../lib/tdl/primitives.js"></script>
+    <script type="text/javascript" src="../lib/tdl/programs.js"></script>
+    <script type="text/javascript" src="../lib/mathlib.js"></script>
+    <script type="text/javascript" src="../lib/util.js"></script>
+
+    <script type="text/javascript" src="lit.js"></script>
+
+    <script id="sphereVertexShader0" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -38,9 +38,9 @@ attribute vec3 normal;
 void main() {
   gl_Position = projection * view * model * position;
 }
-	</script>
-	
-	<script id="sphereFragmentShader0" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader0" type="text/glsl">
 precision highp float;
 
 uniform vec3 color;
@@ -49,11 +49,11 @@ void main() {
   gl_FragColor.rgb = 0.7 * color;
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<!-- Lambert lighting model, Gouraud shading -->
-	
-	<script id="sphereVertexShader1" type="text/glsl">
+    </script>
+
+    <!-- Lambert lighting model, Gouraud shading -->
+
+    <script id="sphereVertexShader1" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -68,7 +68,7 @@ attribute vec3 normal;
 
 varying vec3 intensity;
 
-vec3 lambert(vec3 normal, vec3 light, 
+vec3 lambert(vec3 normal, vec3 light,
              vec3 intensity, vec3 reflectivity) {
   return 0.1 * reflectivity * intensity +
          0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
@@ -82,9 +82,9 @@ void main() {
   intensity = lambert(normalW, lightDirectionW, lightIntensity, color);
   gl_Position = projection * view * positionW;
 }
-	</script>
-	
-	<script id="sphereFragmentShader1" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader1" type="text/glsl">
 precision highp float;
 
 varying vec3 intensity;
@@ -93,11 +93,11 @@ void main() {
   gl_FragColor.rgb = intensity;
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<!-- Phong lighting model, Gouraud shading -->
-	
-	<script id="sphereVertexShader2" type="text/glsl">
+    </script>
+
+    <!-- Phong lighting model, Gouraud shading -->
+
+    <script id="sphereVertexShader2" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -112,16 +112,16 @@ attribute vec3 normal;
 
 varying vec3 intensity;
 
-vec3 lambert(vec3 normal, vec3 light, 
+vec3 lambert(vec3 normal, vec3 light,
              vec3 intensity, vec3 reflectivity) {
   return 0.1 * reflectivity * intensity +
          0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
 }
 
-vec3 phong(vec3 normal, vec3 eye, vec3 light, 
+vec3 phong(vec3 normal, vec3 eye, vec3 light,
            vec3 intensity, vec3 reflectivity) {
   return lambert(normal, light, intensity, reflectivity) +
-         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal), 
+         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal),
                                       light)), 10.0);
 }
 
@@ -131,13 +131,13 @@ void main() {
   vec3 lightDirectionW = normalize(lightPosition - positionW.xyz);
   vec3 eyeDirectionW = normalize(eyePosition - positionW.xyz);
 
-  intensity = phong(normalW, eyeDirectionW, lightDirectionW, 
+  intensity = phong(normalW, eyeDirectionW, lightDirectionW,
                     lightIntensity, color);
   gl_Position = projection * view * positionW;
 }
-	</script>
-	
-	<script id="sphereFragmentShader2" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader2" type="text/glsl">
 precision highp float;
 
 varying vec3 intensity;
@@ -146,11 +146,11 @@ void main() {
   gl_FragColor.rgb = intensity;
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<!-- Phong lighting model, Phong shading -->
-	
-	<script id="sphereVertexShader3" type="text/glsl">
+    </script>
+
+    <!-- Phong lighting model, Phong shading -->
+
+    <script id="sphereVertexShader3" type="text/glsl">
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
@@ -173,9 +173,9 @@ void main() {
 
   gl_Position = projection * view * positionW;
 }
-	</script>
-	
-	<script id="sphereFragmentShader3" type="text/glsl">
+    </script>
+
+    <script id="sphereFragmentShader3" type="text/glsl">
 precision highp float;
 
 uniform vec3 color;
@@ -185,161 +185,161 @@ varying vec3 normalW;
 varying vec3 lightDirectionW;
 varying vec3 eyeDirectionW;
 
-vec3 lambert(vec3 normal, vec3 light, 
+vec3 lambert(vec3 normal, vec3 light,
              vec3 intensity, vec3 reflectivity) {
   return 0.1 * reflectivity * intensity +
          0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
 }
 
-vec3 phong(vec3 normal, vec3 eye, vec3 light, 
+vec3 phong(vec3 normal, vec3 eye, vec3 light,
            vec3 intensity, vec3 reflectivity) {
   return lambert(normal, light, intensity, reflectivity) +
-         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal), 
+         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal),
                                       light)), 10.0);
 }
 
 void main() {
   gl_FragColor.rgb = phong(
-    normalize(normalW), 
-    normalize(eyeDirectionW), 
-    normalize(lightDirectionW), 
+    normalize(normalW),
+    normalize(eyeDirectionW),
+    normalize(lightDirectionW),
     lightIntensity, color);
   gl_FragColor.a = 1.0;
 }
-	</script>
-	
-	<script id="sphereVertexShader4" type="text/glsl">
-		uniform mat4 projection;
-		uniform mat4 view;
-		uniform mat4 model;
+    </script>
 
-		uniform vec3 lightPosition;
-		uniform vec3 eyePosition;
+    <script id="sphereVertexShader4" type="text/glsl">
+        uniform mat4 projection;
+        uniform mat4 view;
+        uniform mat4 model;
 
-		attribute vec4 position;
-		attribute vec3 normal;
+        uniform vec3 lightPosition;
+        uniform vec3 eyePosition;
 
-		varying vec3 normalW;
-		varying vec3 lightDirectionW;
-		varying vec3 eyeDirectionW;
+        attribute vec4 position;
+        attribute vec3 normal;
 
-		void main() {
-  			vec4 positionW = model * position;
-  			normalW = (model * vec4(normal, 0.0)).xyz;
-  			lightDirectionW = lightPosition - positionW.xyz;
-  			eyeDirectionW = eyePosition - positionW.xyz;
-  			gl_Position = projection * view * positionW;
-		}
-	</script>
-	
-	<script id="sphereFragmentShader4" type="text/glsl">
-		precision highp float;
+        varying vec3 normalW;
+        varying vec3 lightDirectionW;
+        varying vec3 eyeDirectionW;
 
-		uniform vec3 color;
-		uniform vec3 lightIntensity;
+        void main() {
+            vec4 positionW = model * position;
+            normalW = (model * vec4(normal, 0.0)).xyz;
+            lightDirectionW = lightPosition - positionW.xyz;
+            eyeDirectionW = eyePosition - positionW.xyz;
+            gl_Position = projection * view * positionW;
+        }
+    </script>
 
-		varying vec3 normalW;
-		varying vec3 lightDirectionW;
-		varying vec3 eyeDirectionW;
+    <script id="sphereFragmentShader4" type="text/glsl">
+        precision highp float;
 
-		float step = 0.25;
+        uniform vec3 color;
+        uniform vec3 lightIntensity;
 
-		// returns the cosinus of the angle between vectors a and b
-		float cosPhi(vec3 a, vec3 b) {
-			return dot(a, b) / (length(a) * length(b));
-		}
+        varying vec3 normalW;
+        varying vec3 lightDirectionW;
+        varying vec3 eyeDirectionW;
 
-		vec3 toon(vec3 normal, vec3 eye, vec3 light, 
-           		vec3 intensity, vec3 reflectivity) {
-			float diffuse = max(0.0, cosPhi(normal, light));
-			float discrete = floor(diffuse / step) * step;
-			vec3 reflection = normalize(reflect(-eye, normal));
-			float spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * step;
-			return reflectivity * vec3(0.25, 0.25, 0.25) + reflectivity * intensity * discrete + intensity * spec;
-		}
+        float step = 0.25;
 
-		void main() {
-			gl_FragColor.rgb = toon(
-    			normalize(normalW), 
-    			normalize(eyeDirectionW), 
-    			normalize(lightDirectionW), 
-    			lightIntensity, color);
-			gl_FragColor.a = 1.0;
-		}
-	</script>
+        // returns the cosinus of the angle between vectors a and b
+        float cosPhi(vec3 a, vec3 b) {
+            return dot(a, b) / (length(a) * length(b));
+        }
+
+        vec3 toon(vec3 normal, vec3 eye, vec3 light,
+                vec3 intensity, vec3 reflectivity) {
+            float diffuse = max(0.0, cosPhi(normal, light));
+            float discrete = floor(diffuse / step) * step;
+            vec3 reflection = normalize(reflect(-eye, normal));
+            float spec = floor(max(0.0, cosPhi(reflection, light)) + step/2.0) * step;
+            return reflectivity * vec3(0.25, 0.25, 0.25) + reflectivity * intensity * discrete + intensity * spec;
+        }
+
+        void main() {
+            gl_FragColor.rgb = toon(
+                normalize(normalW),
+                normalize(eyeDirectionW),
+                normalize(lightDirectionW),
+                lightIntensity, color);
+            gl_FragColor.a = 1.0;
+        }
+    </script>
 
 </head>
 <body>
-	<header class="navbar navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse"
-					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> </a> <a
-					class="brand" href="../index.html">Computer Graphics and
-					Effects</a>
-				<div class="nav-collapse">
-					<ul class="nav">
-						<li><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a>
-						</li>
-						<li class="active"><a href="../uebung2/index.html">&Uuml;bung&nbsp;2</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</header>
+    <header class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse"
+                    data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> </a> <a
+                    class="brand" href="../index.html">Computer Graphics and
+                    Effects</a>
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a>
+                        </li>
+                        <li class="active"><a href="../uebung2/index.html">&Uuml;bung&nbsp;2</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
 
-	<div class="container">
+    <div class="container">
 
-		<div class="page-header">
-			<h1>
-				&Uuml;bung 2.1 <small>Implementierung von Toon Shading</small>
-			</h1>
-			<br/>
-			<a href="index.html">Zur&uuml;ck zur &Uuml;bersicht</a>
-		</div>
+        <div class="page-header">
+            <h1>
+                &Uuml;bung 2.1 <small>Implementierung von Toon Shading</small>
+            </h1>
+            <br/>
+            <a href="index.html">Zur&uuml;ck zur &Uuml;bersicht</a>
+        </div>
 
 
-		<div class="row">
-			<div class="span6">
-				<h2>Aufgabe</h2>
-				<p>Der Phong Shader aus <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3">dem Beispiel</a> soll so modifiziert werden, dass Farbabstufungen auf vier Stufen diskretisiert werden. Diesen Effekt nennt man Toon Shading, weil das Ergebnis eher wie eine Handzeichnung (also ein Cartoon) wirkt. Zusätzlich soll die Geometrie durch andere Objekte als Kugeln ersetzt werden.</p>
-				<h2>Lösungsansatz</h2>
-				<p>Grundsätzlich basiert Toon Shading auf dem <a href="http://de.wikipedia.org/wiki/Phong-Beleuchtungsmodell">Phong Beleuchtungsmodell</a>. Der Wesentliche Unterschied im Toon Shading ist, dass die berechnete Lichtintensität für ein Fragment diskretisiert wird, d.h. es gibt nur eine bestimmte Zahl an Abstufungen, anstelle eines glatten Farbverlaufs.</p>
-				<p>Um Toon Shading durchzuführen, wird zunächst für jedes Fragment die diffuse Beleuchtungskomponente durch Phong Shading berechnet. Anschließend wird dieser Wert so diskretisiert, dass er nur eine von vier Helligkeitsstufen annehmen kann. Hierfür wird der Gleitkommaanteil der berechneten diffusen Komponente abgeschnitten und das Ergebnis mit 0,25 multipliziert. Hierbei gilt es darauf zu achten, dass das Ergebnis nicht 0 wird, sondern mindestens 0,25, da sonst ein großteil des Modells schwarz wird.</p>
-				<p>Im letzten Schritt wird das Glanzlicht berechnet. Da dieses auch diskret sein soll, existieren nur zwei Fälle: ein Fragment reflektiert Glanzlicht, oder nicht. Um das zu berechnen, wird der Kosinus des Winkels zwischen dem an der Oberflächennormalen reflektierten Lichtstrahl und dem Blickwinkel des Betrachters ausgewertet. Erreicht der Kosinus einen gewissen Schwellwert, wird eine weitere Helligkeitsstufe auf den Wert der diffusen Komponente aufaddiert. Durch herabsetzen des Schwellwertes kann die Reflektivität des Materials erhöht werden.</p>
-				<p></p>
-				<h2>Tastaturbelegung</h2>
-				<p>Mit den Tasten 0-4 lassen sich verschiedene Beleuchtungsmodelle auswählen, s.a. <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3">Beispiel von Prof. Dr. Henrik Tramberend</a>. Das Toonshading liegt auf der Taste 4 (standardmäßig aktiv).</p> 
-			</div>
-			<div class="span6">
-				<h2>Demo</h2>
-				<canvas id="canvas" width="500" height="500"></canvas>
-				<h2>Quellcode</h2>
-				<ul>
-					<li><a
-						href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/a31.html#L233"
-						target="_blank"> Toon Shader GLSL Quellcode </a></li>
-				</ul>
-				<h2>Verwendete Resourcen</h2>
-				<ul>
-					<li><a href="https://github.com/toji/gl-matrix"
-						target="_blank">glMatrix Bibliothek</a>
-					</li>
-					<li><a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3"
-						target="_blank">Beispiel von Prof. Dr. Henrik Tramberend für Phong Shading</a>
-					</li>
-					<li><a href="http://twitter.github.com/bootstrap/"
-						target="_blank">Bootstrap CSS für das Layout</a>
-					</li>
-					<li><a href="http://code.google.com/p/threedlibrary/"
-						target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
-					</li>
-				</ul>
+        <div class="row">
+            <div class="span6">
+                <h2>Aufgabe</h2>
+                <p>Der Phong Shader aus <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3">dem Beispiel</a> soll so modifiziert werden, dass Farbabstufungen auf vier Stufen diskretisiert werden. Diesen Effekt nennt man Toon Shading, weil das Ergebnis eher wie eine Handzeichnung (also ein Cartoon) wirkt. Zusätzlich soll die Geometrie durch andere Objekte als Kugeln ersetzt werden.</p>
+                <h2>Lösungsansatz</h2>
+                <p>Grundsätzlich basiert Toon Shading auf dem <a href="http://de.wikipedia.org/wiki/Phong-Beleuchtungsmodell">Phong Beleuchtungsmodell</a>. Der Wesentliche Unterschied im Toon Shading ist, dass die berechnete Lichtintensität für ein Fragment diskretisiert wird, d.h. es gibt nur eine bestimmte Zahl an Abstufungen, anstelle eines glatten Farbverlaufs.</p>
+                <p>Um Toon Shading durchzuführen, wird zunächst für jedes Fragment die diffuse Beleuchtungskomponente durch Phong Shading berechnet. Anschließend wird dieser Wert so diskretisiert, dass er nur eine von vier Helligkeitsstufen annehmen kann. Hierfür wird der Gleitkommaanteil der berechneten diffusen Komponente abgeschnitten und das Ergebnis mit 0,25 multipliziert. Hierbei gilt es darauf zu achten, dass das Ergebnis nicht 0 wird, sondern mindestens 0,25, da sonst ein großteil des Modells schwarz wird.</p>
+                <p>Im letzten Schritt wird das Glanzlicht berechnet. Da dieses auch diskret sein soll, existieren nur zwei Fälle: ein Fragment reflektiert Glanzlicht, oder nicht. Um das zu berechnen, wird der Kosinus des Winkels zwischen dem an der Oberflächennormalen reflektierten Lichtstrahl und dem Blickwinkel des Betrachters ausgewertet. Erreicht der Kosinus einen gewissen Schwellwert, wird eine weitere Helligkeitsstufe auf den Wert der diffusen Komponente aufaddiert. Durch herabsetzen des Schwellwertes kann die Reflektivität des Materials erhöht werden.</p>
+                <p></p>
+                <h2>Tastaturbelegung</h2>
+                <p>Mit den Tasten 0-4 lassen sich verschiedene Beleuchtungsmodelle auswählen, s.a. <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3">Beispiel von Prof. Dr. Henrik Tramberend</a>. Das Toonshading liegt auf der Taste 4 (standardmäßig aktiv).</p>
+            </div>
+            <div class="span6">
+                <h2>Demo</h2>
+                <canvas id="canvas" width="500" height="500"></canvas>
+                <h2>Quellcode</h2>
+                <ul>
+                    <li><a
+                        href="https://github.com/dom-mel/cge-webgl/blob/master/uebung2/a31.html#L233"
+                        target="_blank"> Toon Shader GLSL Quellcode </a></li>
+                </ul>
+                <h2>Verwendete Resourcen</h2>
+                <ul>
+                    <li><a href="https://github.com/toji/gl-matrix"
+                        target="_blank">glMatrix Bibliothek</a>
+                    </li>
+                    <li><a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3"
+                        target="_blank">Beispiel von Prof. Dr. Henrik Tramberend für Phong Shading</a>
+                    </li>
+                    <li><a href="http://twitter.github.com/bootstrap/"
+                        target="_blank">Bootstrap CSS für das Layout</a>
+                    </li>
+                    <li><a href="http://code.google.com/p/threedlibrary/"
+                        target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
+                    </li>
+                </ul>
 
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
