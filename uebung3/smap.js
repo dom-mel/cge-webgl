@@ -11,9 +11,9 @@ function initializeGraphics() {
     var shaders = loadShaders();
     var texture = {
         texture : tdl.textures.loadTexture('escher.jpg')
-    }
+    };
     var torus = new tdl.models.Model(shaders, tdl.primitives
-            .createTorus(0.28, 0.16, 64, 64), texture);
+            .createSphere(0.28, 32, 32), texture);
 
     var renderParams = {
         view : mat4.create(),
@@ -23,7 +23,7 @@ function initializeGraphics() {
     };
     
     var cam = {
-        position : vec3.create([0, 0, 1]),
+        position : vec3.create([0, 0, .6]),
         target : vec3.create(),
         up : vec3.create([ 0, 1, 0 ])
     };
