@@ -35,10 +35,12 @@
 
 		attribute vec4 position;
 		attribute vec3 normal;
+        attribute vec2 texCoord;
 
 		varying vec2 uvCoords;
 
 		void main() {
+            uvCoords = texCoord;
 			gl_Position = projection * view * model * position;
 		}
 	</script>

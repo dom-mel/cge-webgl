@@ -9,8 +9,9 @@ function initializeGraphics() {
     var canvas = $('#canvas')[0];
     var gl = tdl.webgl.setupWebGL(canvas);
     var shaders = loadShaders();
-    
-    var texture = tdl.textures.loadTexture('escher.jpg');
+    var texture = {
+        texture : tdl.textures.loadTexture('escher.jpg')
+    }
     var torus = new tdl.models.Model(shaders, tdl.primitives
             .createTorus(0.28, 0.16, 64, 64), texture);
 
