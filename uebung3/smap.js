@@ -5,7 +5,7 @@ function loadShaders() {
 }
 
 function initializeGraphics() {
-    
+
     var canvas = $('#canvas')[0];
     var gl = tdl.webgl.setupWebGL(canvas);
     var shaders = loadShaders();
@@ -21,14 +21,35 @@ function initializeGraphics() {
         projection : mat4.create(),
         position : vec3.create([0, 0, 0])
     };
-    
+
+    var eyeRadius = 0.6;
+
     var cam = {
-        position : vec3.create([0, 0, .6]),
+        position : vec3.create([0, 0, eyeRadius]),
         target : vec3.create(),
         up : vec3.create([ 0, 1, 0 ])
     };
 
+    // Animation needs accurate timing information.
+    var elapsedTime = 0.0;
+    var then = 0.0;
+    var clock = 0.0;
+
     function render() {
+
+        var now = (new Date()).getTime() * 0.001;
+        elapsedTime = (then == 0.0 ? 0.0 : now - then);
+        then = now;
+        clock += elapsedTime;
+
+        // Calculate the current eye position.
+        cam.position[0] = Math.sin(clock * 0.2) * eyeRadius;
+        cam.position[1] = 0;
+        cam.position[2] = Math.cos(clock * 0.2) * eyeRadius;
+
+
+        renderParams.camPos = cam.position;
+
         tdl.webgl.requestAnimationFrame(render, canvas);
 
         gl.colorMask(true, true, true, true);

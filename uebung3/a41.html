@@ -32,16 +32,26 @@
 		uniform mat4 projection;
 		uniform mat4 view;
 		uniform mat4 model;
+        uniform vec3 camPos;
 
-		attribute vec4 position;
-		attribute vec3 normal;
+        attribute vec4 position;
+        attribute vec3 normal;
         attribute vec2 texCoord;
 
 		varying vec2 uvCoords;
+        varying vec3 debug;
 
 		void main() {
-            uvCoords = texCoord;
-			gl_Position = projection * view * model * position;
+
+            vec3 normalW = vec3(model * vec4(normal, 0.0));
+
+            vec3 r = normalize(reflect(camPos, normalW));
+            float m = 2.0 * sqrt(r.x*r.x + r.y*r.y + (r.z + 1.0)*(r.z + 1.0));
+
+            //uvCoords = vec2(r.x/m + 0.5, r.y/m + 0.5);
+            uvCoords = vec2((r.x + 1.0)/2.0, (r.y + 1.0)/2.0);
+            debug = vec3(uvCoords.y, 0, 0);
+            gl_Position = projection * view * model * position;
 		}
 	</script>
 	
@@ -50,10 +60,12 @@
 
 		uniform sampler2D texture;
 
+        varying vec3 debug;
 		varying vec2 uvCoords;
 
 		void main() {
 			gl_FragColor.rgb = texture2D(texture, uvCoords).rgb;
+            //gl_FragColor.rgb = debug;
 			gl_FragColor.a = 1.0;
 		}
 	</script>
