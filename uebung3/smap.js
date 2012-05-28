@@ -10,19 +10,22 @@ function initializeGraphics() {
     var gl = tdl.webgl.setupWebGL(canvas);
     var shaders = loadShaders();
     var texture = {
-        texture : tdl.textures.loadTexture('escher.jpg')
+        texture : tdl.textures.loadTexture('cga-labor-sphere.png')
     };
-    var torus = new tdl.models.Model(shaders, tdl.primitives
-            .createSphere(0.28, 32, 32), texture);
+    var sphere = new tdl.models.Model(shaders, tdl.primitives
+            .createSphere(1, 64, 64), texture);
+            //.createCube(1), texture);
+            //.createTorus(0.5, 0.5, 64, 64), texture);
 
     var renderParams = {
         view : mat4.create(),
         model : mat4.create(),
         projection : mat4.create(),
-        position : vec3.create([0, 0, 0])
+        position : vec3.create([0, 0, 0]),
+        camPos : vec3.create()
     };
 
-    var eyeRadius = 0.6;
+    var eyeRadius = 2;
 
     var cam = {
         position : vec3.create([0, 0, eyeRadius]),
@@ -42,15 +45,15 @@ function initializeGraphics() {
         then = now;
         clock += elapsedTime;
 
-        // Calculate the current eye position.
+        /*/ Calculate the current eye position.
         cam.position[0] = Math.sin(clock * 0.2) * eyeRadius;
         cam.position[1] = 0;
         cam.position[2] = Math.cos(clock * 0.2) * eyeRadius;
-
-
-        renderParams.camPos = cam.position;
+        */
 
         tdl.webgl.requestAnimationFrame(render, canvas);
+        renderParams.camPos = cam.position;
+
 
         gl.colorMask(true, true, true, true);
         gl.depthMask(true);
@@ -68,15 +71,12 @@ function initializeGraphics() {
         mat4.lookAt(cam.position, cam.target,
                 cam.up, renderParams.view);
 
-        torus.drawPrep(renderParams);
+        sphere.drawPrep(renderParams);
 
         mat4.identity(renderParams.model);
-        var rightAngleRad = degToRad(90.0);
-        mat4.rotateX(renderParams.model, rightAngleRad);
-        mat4.rotateY(renderParams.model, rightAngleRad);
         mat4.translate(renderParams.model, renderParams.position);
 
-        torus.draw(renderParams);
+        sphere.draw(renderParams);
     }
     
     render(gl, renderParams);

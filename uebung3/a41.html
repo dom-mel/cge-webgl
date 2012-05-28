@@ -32,25 +32,29 @@
 		uniform mat4 projection;
 		uniform mat4 view;
 		uniform mat4 model;
-        uniform vec3 camPos;
 
         attribute vec4 position;
-        attribute vec3 normal;
+        attribute vec4 normal;
         attribute vec2 texCoord;
+        attribute vec3 camPos;
 
-		varying vec2 uvCoords;
-        varying vec3 debug;
+		varying vec2 uvCoord;
+        varying vec4 debug;
 
 		void main() {
 
-            vec3 normalW = vec3(model * vec4(normal, 0.0));
+            vec4 normalC = normalize(view * model * normal);
+            vec4 positionC = view * model * position;
+            vec4 viewDir = normalize(positionC);
 
-            vec3 r = normalize(reflect(camPos, normalW));
-            float m = 2.0 * sqrt(r.x*r.x + r.y*r.y + (r.z + 1.0)*(r.z + 1.0));
+            vec4 r = reflect(viewDir, normalC);
+            debug = normal;
 
-            //uvCoords = vec2(r.x/m + 0.5, r.y/m + 0.5);
-            uvCoords = vec2((r.x + 1.0)/2.0, (r.y + 1.0)/2.0);
-            debug = vec3(uvCoords.y, 0, 0);
+            float m = 2.0 * sqrt( pow(r.x, 2.0) + pow(r.y, 2.0) + pow(r.z-1.0, 2.0));
+            uvCoord = vec2((r.x/m + 0.5), (r.y/m + 0.5));
+            //uvCoord = vec2((r.x + 1.0) / 2.0, (r.y + 1.0) / 2.0);
+            //uvCoord = r.xy;
+
             gl_Position = projection * view * model * position;
 		}
 	</script>
@@ -60,12 +64,12 @@
 
 		uniform sampler2D texture;
 
-        varying vec3 debug;
-		varying vec2 uvCoords;
+		varying vec2 uvCoord;
+        varying vec4 debug;
 
 		void main() {
-			gl_FragColor.rgb = texture2D(texture, uvCoords).rgb;
-            //gl_FragColor.rgb = debug;
+			gl_FragColor.rgb = texture2D(texture, uvCoord).rgb;
+            //gl_FragColor.rgb = debug.rgb;
 			gl_FragColor.a = 1.0;
 		}
 	</script>
