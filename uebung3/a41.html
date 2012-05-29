@@ -35,25 +35,15 @@
 
         attribute vec4 position;
         attribute vec4 normal;
-        attribute vec2 texCoord;
-        attribute vec3 camPos;
 
 		varying vec2 uvCoord;
-        varying vec4 debug;
 
 		void main() {
+            vec4 normalC = normalize(view * model * vec4(normal.xyz, 0.0));
+            vec4 viewDir = vec4(0,0,-1,0);
 
-            vec4 normalC = normalize(view * model * normal);
-            vec4 positionC = view * model * position;
-            vec4 viewDir = normalize(positionC);
-
-            vec4 r = reflect(viewDir, normalC);
-            debug = normal;
-
-            float m = 2.0 * sqrt( pow(r.x, 2.0) + pow(r.y, 2.0) + pow(r.z-1.0, 2.0));
-            uvCoord = vec2((r.x/m + 0.5), (r.y/m + 0.5));
-            //uvCoord = vec2((r.x + 1.0) / 2.0, (r.y + 1.0) / 2.0);
-            //uvCoord = r.xy;
+            // Flipped texture y coordinate
+            uvCoord = vec2((normalC.x + 1.0) / 2.0, 1.0 - (normalC.y + 1.0) / 2.0);
 
             gl_Position = projection * view * model * position;
 		}
@@ -65,11 +55,9 @@
 		uniform sampler2D texture;
 
 		varying vec2 uvCoord;
-        varying vec4 debug;
 
 		void main() {
 			gl_FragColor.rgb = texture2D(texture, uvCoord).rgb;
-            //gl_FragColor.rgb = debug.rgb;
 			gl_FragColor.a = 1.0;
 		}
 	</script>
