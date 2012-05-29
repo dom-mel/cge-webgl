@@ -40,7 +40,6 @@
 
 		void main() {
             vec4 normalC = normalize(view * model * vec4(normal.xyz, 0.0));
-            vec4 viewDir = vec4(0,0,-1,0);
 
             // Flipped texture y coordinate
             uvCoord = vec2((normalC.x + 1.0) / 2.0, 1.0 - (normalC.y + 1.0) / 2.0);
@@ -90,32 +89,24 @@
 
         <div class="page-header">
             <h1>
-                &Uuml;bung 3.1 <small>Sphärisches Reflection Mapping</small>
+                &Uuml;bung 3 <small>Sphärisches Reflection Mapping</small>
             </h1>
         </div>
-
-
         <div class="row">
             <div class="span6">
                 <h2>Aufgabe</h2>
                 <p>
-                    TODO
+                    Es soll ein Satz Shaderprogramme für ein sphärisches Umgebungsmapping entwickelt werden (Vertex- / Fragmentshader).
                 </p>
                 <h2>Lösungsansatz</h2>
                 <p>
-                    TODO
+                    Durch festlegen einer konstanten Kamerapoition wird eine orthographische Projektion erzeugt. Dieser Vorgang entspricht der Betrachtung aller Vektoren, d.h. Vertices und Normalen, in Koordinaten des Kameraraums. Anschließend wird eine Abbildung von den Vertexnormalen auf Texturkoordinaten vorgenommen, um den Teil der Textur, der die Kugel anzeigt, auf die dreidimensionale Kugeloberfläche zu projizieren. Dabei muss beachtet werden, dass die Kamera einen ausreichenden Abstand zur Kugel hat, da in dem simulierten Modell der Betrachter unendlich weit entfernt ist; orthogonale Projektion vorausgesetzt.
                 </p>
-      		</div>
-      		<div class="span6">
-      			<h2>Demo</h2>
-                <canvas id="canvas" width="500" height="500"></canvas>
+                <p>Aufgrund der ausschließlichen Betrachtung von Vertexnormalen im Kameraraum passt sich die Projektion der Textur nicht an den Betrachtungswinkel des Kugelmodells an, da die Normalen in Kamerakoordinaten aus jedem Blickwinkel gleich sind.</p>
                 <h2>Verwendete Resourcen</h2>
                 <ul>
                     <li><a href="https://github.com/toji/gl-matrix"
                            target="_blank">glMatrix Bibliothek</a>
-                    </li>
-                    <li><a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3"
-                           target="_blank">Beispiel von Prof. Dr. Henrik Tramberend für Phong Shading</a>
                     </li>
                     <li><a href="http://twitter.github.com/bootstrap/"
                            target="_blank">Bootstrap CSS für das Layout</a>
@@ -132,16 +123,20 @@
                 <h2>Quellcode</h2>
                 <ul>
                     <li>
-                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung2/lit3.js" target="_blank">
-                            JavaScript Programm lit3.js
+                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung3/smap.js" target="_blank">
+                            JavaScript Programm smap.js
                         </a>
                     </li>
                     <li>
-                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung2/a33.html" target="_blank">
-                            Diese HTML Seite. Shader befinden sich im Header.
+                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung3/index.html" target="_blank">
+                            Shaderprogramm für sphärisches Reflection Mapping
                         </a>
                     </li>
                 </ul>
+            </div>
+      		<div class="span6">
+      			<h2>Demo</h2>
+                <canvas id="canvas" width="500" height="500"></canvas>
             </div>
         </div>
     </div>
