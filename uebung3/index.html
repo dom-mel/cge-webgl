@@ -12,7 +12,7 @@
     </style>
     <link href="../css/bootstrap-responsive.css" rel="stylesheet">
     <link href="../css/my.css" rel="stylesheet">
-    <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+    <script src="../js/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="../js/bootstrap.js" type="text/javascript"></script>
 
     <script type="text/javascript" src="../lib/glMatrix-0.9.5.min.js"></script>
@@ -22,9 +22,49 @@
     <script type="text/javascript" src="../lib/tdl/models.js"></script>
     <script type="text/javascript" src="../lib/tdl/primitives.js"></script>
     <script type="text/javascript" src="../lib/tdl/programs.js"></script>
+    <script type="text/javascript" src="../lib/tdl/textures.js"></script>
     <script type="text/javascript" src="../lib/mathlib.js"></script>
     <script type="text/javascript" src="../lib/util.js"></script>
     
+    <script type="text/javascript" src="smap.js"></script>
+    
+    <script id="sphereVertexShader" type="text/glsl">
+		uniform mat4 projection;
+		uniform mat4 view;
+		uniform mat4 model;
+
+        attribute vec4 position;
+        attribute vec4 normal;
+
+		varying vec2 uvCoord;
+
+		void main() {
+            vec4 normalC = normalize(view * model * vec4(normal.xyz, 0.0));
+            vec4 viewDir = vec4(0,0,-1,0);
+
+            // Flipped texture y coordinate
+            uvCoord = vec2((normalC.x + 1.0) / 2.0, 1.0 - (normalC.y + 1.0) / 2.0);
+
+            gl_Position = projection * view * model * position;
+		}
+	</script>
+	
+	<script id="sphereFragmentShader" type="text/glsl">
+		precision highp float;
+
+		uniform sampler2D texture;
+
+		varying vec2 uvCoord;
+
+		void main() {
+			gl_FragColor.rgb = texture2D(texture, uvCoord).rgb;
+			gl_FragColor.a = 1.0;
+		}
+	</script>
+	
+	<script type="text/javascript">
+		$(document).ready(initializeGraphics);
+	</script> 
 </head>
 <body>
     <header class="navbar navbar-fixed-top">
@@ -50,21 +90,60 @@
 
         <div class="page-header">
             <h1>
-                &Uuml;bung 3 <small>Environment Mapping</small>
+                &Uuml;bung 3.1 <small>Sphärisches Reflection Mapping</small>
             </h1>
+            <br/>
+            <a href="index.html">Zur&uuml;ck zur &Uuml;bersicht</a>
         </div>
 
 
         <div class="row">
             <div class="span6">
-                <h2><a href="a41.html">Übung 3.1</a></h2>
+                <h2>Aufgabe</h2>
                 <p>
-                    Anwendung von sphärischem Reflection Mapping.
+                    TODO
                 </p>
-                <h2><a href="a42.html">Übung 3.2</a></h2>
+                <h2>Lösungsansatz</h2>
                 <p>
-                    Anwendung von kubischem Reflection Mapping.
+                    TODO
                 </p>
+      		</div>
+      		<div class="span6">
+      			<h2>Demo</h2>
+                <canvas id="canvas" width="500" height="500"></canvas>
+                <h2>Verwendete Resourcen</h2>
+                <ul>
+                    <li><a href="https://github.com/toji/gl-matrix"
+                           target="_blank">glMatrix Bibliothek</a>
+                    </li>
+                    <li><a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/02-tdl-simple/lit.html#3"
+                           target="_blank">Beispiel von Prof. Dr. Henrik Tramberend für Phong Shading</a>
+                    </li>
+                    <li><a href="http://twitter.github.com/bootstrap/"
+                           target="_blank">Bootstrap CSS für das Layout</a>
+                    </li>
+                    <li><a href="http://code.google.com/p/threedlibrary/"
+                           target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
+                    </li>
+                    <li>
+                        <a href="http://jquery.org/" target="_blank">
+                            JQuery
+                        </a>
+                    </li>
+                </ul>
+                <h2>Quellcode</h2>
+                <ul>
+                    <li>
+                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung2/lit3.js" target="_blank">
+                            JavaScript Programm lit3.js
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung2/a33.html" target="_blank">
+                            Diese HTML Seite. Shader befinden sich im Header.
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
