@@ -10,7 +10,7 @@ function initializeGraphics() {
     var gl = tdl.webgl.setupWebGL(canvas);
     var shaders = loadShaders();
     var texture = {
-        texture : tdl.textures.loadTexture('cga-labor-sphere.png')
+        texture : tdl.textures.loadTexture('cga-labor-sphere-small.png')
     };
     var sphere = new tdl.models.Model(shaders, tdl.primitives
             .createSphere(1, 64, 64), texture);
