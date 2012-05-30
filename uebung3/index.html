@@ -5,10 +5,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="../css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
-    body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-    }
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
     </style>
     <link href="../css/bootstrap-responsive.css" rel="stylesheet">
     <link href="../css/my.css" rel="stylesheet">
@@ -25,120 +25,120 @@
     <script type="text/javascript" src="../lib/tdl/textures.js"></script>
     <script type="text/javascript" src="../lib/mathlib.js"></script>
     <script type="text/javascript" src="../lib/util.js"></script>
-    
+
     <script type="text/javascript" src="smap.js"></script>
-    
+
     <script id="sphereVertexShader" type="text/glsl">
-		uniform mat4 projection;
-		uniform mat4 view;
-		uniform mat4 model;
+        uniform mat4 projection;
+        uniform mat4 view;
+        uniform mat4 model;
 
         attribute vec4 position;
         attribute vec4 normal;
 
-		varying vec2 uvCoord;
+        varying vec2 uvCoord;
 
-		void main() {
+        void main() {
             vec4 normalC = normalize(view * model * vec4(normal.xyz, 0.0));
 
             // Flipped texture y coordinate
             uvCoord = vec2((normalC.x + 1.0) / 2.0, 1.0 - (normalC.y + 1.0) / 2.0);
 
             gl_Position = projection * view * model * position;
-		}
-	</script>
-	
-	<script id="sphereFragmentShader" type="text/glsl">
-		precision highp float;
+        }
+    </script>
 
-		uniform sampler2D texture;
+    <script id="sphereFragmentShader" type="text/glsl">
+        precision highp float;
 
-		varying vec2 uvCoord;
+        uniform sampler2D texture;
 
-		void main() {
-			gl_FragColor.rgb = texture2D(texture, uvCoord).rgb;
-			gl_FragColor.a = 1.0;
-		}
-	</script>
-	
-	<script type="text/javascript">
-		$(document).ready(initializeGraphics);
-	</script> 
+        varying vec2 uvCoord;
+
+        void main() {
+        gl_FragColor.rgb = texture2D(texture, uvCoord).rgb;
+        gl_FragColor.a = 1.0;
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(initializeGraphics);
+    </script>
 </head>
 <body>
-    <header class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse"
-                    data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+<header class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse"
+               data-target=".nav-collapse"> <span class="icon-bar"></span> <span
                     class="icon-bar"></span> <span class="icon-bar"></span> </a> <a
-                    class="brand" href="../index.html">Computer Graphics and
-                    Effects</a>
-                <div class="nav-collapse">
-                    <ul class="nav">
-                        <li><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a></li>
-                        <li><a href="../uebung2/index.html">&Uuml;bung&nbsp;2</a></li>
-                        <li class="active"><a href="../uebung3/index.html">Übung&nbsp;3</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-
-        <div class="page-header">
-            <h1>
-                &Uuml;bung 3 <small>Sphärisches Reflection Mapping</small>
-            </h1>
-        </div>
-        <div class="row">
-            <div class="span6">
-                <h2>Aufgabe</h2>
-                <p>
-                    Es soll ein Satz Shaderprogramme für ein sphärisches Umgebungsmapping entwickelt werden (Vertex- / Fragmentshader).
-                </p>
-                <h2>Lösungsansatz</h2>
-                <p>
-                    Durch festlegen einer konstanten Kamerapoition wird eine orthographische Projektion erzeugt. Dieser Vorgang entspricht der Betrachtung aller Vektoren, d.h. Vertices und Normalen, in Koordinaten des Kameraraums. Anschließend wird eine Abbildung von den Vertexnormalen auf Texturkoordinaten vorgenommen, um den Teil der Textur, der die Kugel anzeigt, auf die dreidimensionale Kugeloberfläche zu projizieren. Dabei muss beachtet werden, dass die Kamera einen ausreichenden Abstand zur Kugel hat, da in dem simulierten Modell der Betrachter unendlich weit entfernt ist; orthogonale Projektion vorausgesetzt.
-                </p>
-                <p>Aufgrund der ausschließlichen Betrachtung von Vertexnormalen im Kameraraum passt sich die Projektion der Textur nicht an den Betrachtungswinkel des Kugelmodells an, da die Normalen in Kamerakoordinaten aus jedem Blickwinkel gleich sind.</p>
-                <h2>Verwendete Resourcen</h2>
-                <ul>
-                    <li><a href="https://github.com/toji/gl-matrix"
-                           target="_blank">glMatrix Bibliothek</a>
-                    </li>
-                    <li><a href="http://twitter.github.com/bootstrap/"
-                           target="_blank">Bootstrap CSS für das Layout</a>
-                    </li>
-                    <li><a href="http://code.google.com/p/threedlibrary/"
-                           target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
-                    </li>
-                    <li>
-                        <a href="http://jquery.org/" target="_blank">
-                            JQuery
-                        </a>
-                    </li>
+                class="brand" href="../index.html">Computer Graphics and
+            Effects</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a></li>
+                    <li><a href="../uebung2/index.html">&Uuml;bung&nbsp;2</a></li>
+                    <li class="active"><a href="../uebung3/index.html">Übung&nbsp;3</a></li>
                 </ul>
-                <h2>Quellcode</h2>
-                <ul>
-                    <li>
-                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung3/smap.js" target="_blank">
-                            JavaScript Programm smap.js
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung3/index.html" target="_blank">
-                            Shaderprogramm für sphärisches Reflection Mapping
-                        </a>
-                    </li>
-                </ul>
-            </div>
-      		<div class="span6">
-      			<h2>Demo</h2>
-                <canvas id="canvas" width="500" height="500"></canvas>
             </div>
         </div>
     </div>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>
+            &Uuml;bung 3 <small>Sphärisches Reflection Mapping</small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span6">
+            <h2>Aufgabe</h2>
+            <p>
+                Es soll ein Satz Shaderprogramme für ein sphärisches Umgebungsmapping entwickelt werden (Vertex- / Fragmentshader).
+            </p>
+            <h2>Lösungsansatz</h2>
+            <p>
+                Durch festlegen einer konstanten Kamerapoition wird eine orthographische Projektion erzeugt. Dieser Vorgang entspricht der Betrachtung aller Vektoren, d.h. Vertices und Normalen, in Koordinaten des Kameraraums. Anschließend wird eine Abbildung von den Vertexnormalen auf Texturkoordinaten vorgenommen, um den Teil der Textur, der die Kugel anzeigt, auf die dreidimensionale Kugeloberfläche zu projizieren. Dabei muss beachtet werden, dass die Kamera einen ausreichenden Abstand zur Kugel hat, da in dem simulierten Modell der Betrachter unendlich weit entfernt ist; orthogonale Projektion vorausgesetzt.
+            </p>
+            <p>Aufgrund der ausschließlichen Betrachtung von Vertexnormalen im Kameraraum passt sich die Projektion der Textur nicht an den Betrachtungswinkel des Kugelmodells an, da die Normalen in Kamerakoordinaten aus jedem Blickwinkel gleich sind.</p>
+            <h2>Verwendete Resourcen</h2>
+            <ul>
+                <li><a href="https://github.com/toji/gl-matrix"
+                       target="_blank">glMatrix Bibliothek</a>
+                </li>
+                <li><a href="http://twitter.github.com/bootstrap/"
+                       target="_blank">Bootstrap CSS für das Layout</a>
+                </li>
+                <li><a href="http://code.google.com/p/threedlibrary/"
+                       target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
+                </li>
+                <li>
+                    <a href="http://jquery.org/" target="_blank">
+                        JQuery
+                    </a>
+                </li>
+            </ul>
+            <h2>Quellcode</h2>
+            <ul>
+                <li>
+                    <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung3/smap.js" target="_blank">
+                        JavaScript Programm smap.js
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung3/index.html" target="_blank">
+                        Shaderprogramm für sphärisches Reflection Mapping
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="span6">
+            <h2>Demo</h2>
+            <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+    </div>
+</div>
 </body>
 </html>
