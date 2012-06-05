@@ -1,7 +1,7 @@
 <!Doctype html>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Toon Shading</title>
+    <title>CGE</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link href="../css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
@@ -27,6 +27,8 @@
     <script type="text/javascript" src="../lib/util.js"></script>
 
     <script type="text/javascript" src="smap.js"></script>
+    <script type="text/javascript" src="camera.js"></script>
+    <script type="text/javascript" src="model.js"></script>
 
     <script id="sphereVertexShader" type="text/glsl">
         uniform mat4 projection;
@@ -34,16 +36,8 @@
         uniform mat4 model;
 
         attribute vec4 position;
-        attribute vec4 normal;
-
-        varying vec2 uvCoord;
 
         void main() {
-            vec4 normalC = normalize(view * model * vec4(normal.xyz, 0.0));
-
-            // Flipped texture y coordinate
-            uvCoord = vec2((normalC.x + 1.0) / 2.0, 1.0 - (normalC.y + 1.0) / 2.0);
-
             gl_Position = projection * view * model * position;
         }
     </script>
@@ -51,35 +45,31 @@
     <script id="sphereFragmentShader" type="text/glsl">
         precision highp float;
 
-        uniform sampler2D texture;
-
-        varying vec2 uvCoord;
+        uniform vec3 color;
 
         void main() {
-            gl_FragColor.rgb = texture2D(texture, uvCoord).rgb;
+            gl_FragColor.rgb = color;
             gl_FragColor.a = 1.0;
         }
     </script>
 
-    <script type="text/javascript">
-        $(document).ready(initializeGraphics);
-    </script>
 </head>
 <body>
 <header class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse"
-               data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-                    class="icon-bar"></span> <span class="icon-bar"></span> </a> <a
-                class="brand" href="../index.html">Computer Graphics and
-            Effects</a>
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="../index.html">Computer Graphics and Effects</a>
             <div class="nav-collapse">
                 <ul class="nav">
-                    <li><a href="../uebung1/index.html">&Uuml;bung&nbsp;1</a></li>
-                    <li><a href="../uebung2/index.html">&Uuml;bung&nbsp;2</a></li>
-                    <li class="active"><a href="../uebung3/index.html">Übung&nbsp;3</a></li>
-                    <li><a href="../uebung4/index.html">&Uuml;bung&nbsp;4</a></li>
+                    <li><a href="../uebung1/index.html">&Uuml;bung 1</a></li>
+                    <li><a href="../uebung2/index.html">&Uuml;bung 2</a></li>
+                    <li><a href="../uebung3/index.html">Übung 3</a></li>
+                    <li class="active"><a href="../uebung4/index.html">Übung 4</a></li>
                 </ul>
             </div>
         </div>
@@ -90,30 +80,22 @@
 
     <div class="page-header">
         <h1>
-            &Uuml;bung 3 <small>Sphärisches Reflection Mapping</small>
+            &Uuml;bung 4 <small>Water Shading</small>
         </h1>
     </div>
     <div class="row">
         <div class="span6">
             <h2>Aufgabe</h2>
             <p>
-                Es soll ein Satz Shaderprogramme für ein sphärisches Umgebungsmapping entwickelt werden (Vertex- / Fragmentshader).
+                FIXME
             </p>
-            <h2>Lösungsansatz</h2>
-            <p>
-                Durch festlegen einer konstanten Kamerapoition wird eine orthographische Projektion erzeugt. Dieser Vorgang entspricht der Betrachtung aller Vektoren, d.h. Vertices und Normalen, in Koordinaten des Kameraraums. Anschließend wird eine Abbildung von den Vertexnormalen auf Texturkoordinaten vorgenommen, um den Teil der Textur, der die Kugel anzeigt, auf die dreidimensionale Kugeloberfläche zu projizieren. Dabei muss beachtet werden, dass die Kamera einen ausreichenden Abstand zur Kugel hat, da in dem simulierten Modell der Betrachter unendlich weit entfernt ist; orthogonale Projektion vorausgesetzt.
-            </p>
-            <p>Aufgrund der ausschließlichen Betrachtung von Vertexnormalen im Kameraraum passt sich die Projektion der Textur nicht an den Betrachtungswinkel des Kugelmodells an, da die Normalen in Kamerakoordinaten aus jedem Blickwinkel gleich sind.</p>
             <h2>Verwendete Resourcen</h2>
             <ul>
-                <li><a href="https://github.com/toji/gl-matrix"
-                       target="_blank">glMatrix Bibliothek</a>
+                <li><a href="https://github.com/toji/gl-matrix" target="_blank">glMatrix Bibliothek</a>
                 </li>
-                <li><a href="http://twitter.github.com/bootstrap/"
-                       target="_blank">Bootstrap CSS für das Layout</a>
+                <li><a href="http://twitter.github.com/bootstrap/" target="_blank">Bootstrap CSS für das Layout</a>
                 </li>
-                <li><a href="http://code.google.com/p/threedlibrary/"
-                       target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
+                <li><a href="http://code.google.com/p/threedlibrary/" target="_blank">threedlibrary, JavaScript OpenGL Bibliothek</a>
                 </li>
                 <li>
                     <a href="http://jquery.org/" target="_blank">
