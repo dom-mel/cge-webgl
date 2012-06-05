@@ -13,8 +13,20 @@ var Program = function() {
     var shaders = loadShaders();
 
     this.sceneObjects.push(new Model(
-        new tdl.models.Model(shaders, tdl.primitives.createSphere(1, 64, 64)),
-        vec3.create([0, 1, 0]),
+        new tdl.models.Model(shaders, tdl.primitives.createSphere(0.5, 64, 64)),
+        vec3.create([1, 1, 0]),
+        vec3.create([1, 0, 0])
+    ));
+
+    this.sceneObjects.push(new Model(
+        new tdl.models.Model(shaders, tdl.primitives.createSphere(0.5, 64, 64)),
+        vec3.create([0, 0, 0]),
+        vec3.create([1, 0, 0])
+    ));
+
+    this.sceneObjects.push(new Model(
+        new tdl.models.Model(shaders, tdl.primitives.createSphere(0.5, 64, 64)),
+        vec3.create([-1, -1, 0]),
         vec3.create([1, 0, 0])
     ));
 
