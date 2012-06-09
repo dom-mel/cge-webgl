@@ -30,7 +30,7 @@
     <script type="text/javascript" src="camera.js"></script>
     <script type="text/javascript" src="model.js"></script>
 
-    <script id="sphereVertexShader" type="text/glsl">
+    <script id="colorVs" type="text/glsl">
         uniform mat4 projection;
         uniform mat4 view;
         uniform mat4 model;
@@ -42,7 +42,7 @@
         }
     </script>
 
-    <script id="sphereFragmentShader" type="text/glsl">
+    <script id="colorFs" type="text/glsl">
         precision highp float;
 
         uniform vec3 color;
@@ -52,6 +52,36 @@
             gl_FragColor.a = 1.0;
         }
     </script>
+
+    <script id="textureVs" type="text/glsl">
+        uniform mat4 projection;
+        uniform mat4 view;
+        uniform mat4 model;
+
+        attribute vec3 normal;
+        attribute vec4 position;
+
+        varying vec3 textureIndex;
+
+        void main() {
+            gl_Position = projection * view * model * position;
+            textureIndex = gl_Position.xyz;
+        }
+    </script>
+
+    <script id="textureFs" type="text/glsl">
+        precision highp float;
+
+        uniform samplerCube skyBox;
+
+        varying vec3 textureIndex;
+
+        void main() {
+            gl_FragColor.rgb = textureCube(skyBox, textureIndex).rgb;
+            gl_FragColor.a = 1.0;
+        }
+    </script>
+
 
 </head>
 <body>
@@ -99,6 +129,16 @@
                 </li>
                 <li>
                     <a href="http://jquery.org/" target="_blank">JQuery</a>
+                </li>
+                <li>
+                    <a href="https://public.beuth-hochschule.de/~tramberend/12-ss/mmi-rtr/examples/04-tdl-multipass/index.html" target="_blank">
+                        Skybox aus Multi-Pass Rendering example
+                    </a>
+                </li>
+                <li>
+                    <a href="http://www.redsorceress.com/skybox.html" target="_blank">
+                        Skybox texture
+                    </a>
                 </li>
             </ul>
             <h2>Quellcode</h2>

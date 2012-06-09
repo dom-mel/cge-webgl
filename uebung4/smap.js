@@ -1,8 +1,4 @@
 
-function loadShaders() {
-    return tdl.programs.loadProgramFromScriptTags(
-            'sphereVertexShader', 'sphereFragmentShader');
-}
 
 var Program = function() {
 
@@ -10,30 +6,39 @@ var Program = function() {
     this.gl = tdl.webgl.setupWebGL(this.canvas);
     this.sceneObjects = [];
 
-    var shaders = loadShaders();
+    var shaders = this.loadShaders();
+    var textures = this.loadTextures();
 
     this.sceneObjects.push(new Model(
-        new tdl.models.Model(shaders, tdl.primitives.createSphere(0.5, 64, 64)),
+        new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([1, 1, 0]),
         vec3.create([1, 0, 0])
     ));
 
     this.sceneObjects.push(new Model(
-        new tdl.models.Model(shaders, tdl.primitives.createSphere(0.5, 64, 64)),
+        new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([0, 0, 0]),
         vec3.create([1, 0, 0])
     ));
 
     this.sceneObjects.push(new Model(
-        new tdl.models.Model(shaders, tdl.primitives.createSphere(0.5, 64, 64)),
+        new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([-1, -1, 0]),
         vec3.create([1, 0, 0])
     ));
 
     this.sceneObjects.push(new Model(
-        new tdl.models.Model(shaders, tdl.primitives.createPlane(10, 10, 1, 1)),
+        new tdl.models.Model(shaders.color, tdl.primitives.createPlane(10, 10, 1, 1), textures),
         vec3.create([0, 0, 0]),
         vec3.create([0, 0, 1])
+    ));
+
+    var skyBoxPrimitives = tdl.primitives.createCube(20);
+    tdl.primitives.reorientPositions(skyBoxPrimitives.position, mat4.scale(mat4.identity([]), [-1, -1, -1]));
+    this.sceneObjects.push(new Model(
+        new tdl.models.Model(shaders.texture, skyBoxPrimitives, textures),
+        vec3.create([0, 0, 0]),
+        vec3.create([0, 0, 0])
     ));
 
     this.cam = new Camera({
@@ -73,6 +78,30 @@ Program.prototype.prepareGL = function() {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.enable(this.gl.DEPTH_TEST);
 };
+
+Program.prototype.loadShaders = function() {
+    var shaders = {};
+
+    shaders.color = tdl.programs.loadProgramFromScriptTags('colorVs', 'colorFs');
+    shaders.texture = tdl.programs.loadProgramFromScriptTags('textureVs', 'textureFs');
+
+    return shaders;
+};
+
+Program.prototype.loadTextures = function() {
+    var skyBox = tdl.textures.loadTexture([
+        'images/skybox_right.jpg',
+        'images/skybox_left.jpg',
+        'images/skybox_top.jpg',
+        'images/skybox_top.jpg',
+        'images/skybox_front.jpg',
+        'images/skybox_back.jpg'
+    ]);
+    return {
+        skybox: skyBox
+    };
+};
+
 
 $(document).ready(function(){
     var p = new Program();
