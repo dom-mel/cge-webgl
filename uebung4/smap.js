@@ -116,7 +116,7 @@ Program.prototype.loadTextures = function() {
         'images/skybox_right.jpg',
         'images/skybox_left.jpg',
         'images/skybox_top.jpg',
-        'images/skybox_top.jpg',
+        'images/skybox_bottom.jpg',
         'images/skybox_front.jpg',
         'images/skybox_back.jpg'
     ]);
