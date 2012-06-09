@@ -9,9 +9,6 @@ var Program = function() {
     var shaders = this.loadShaders();
     var textures = this.loadTextures();
 
-    console.log(textures);
-
-
     this.sceneObjects.push(new Model(
         new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([1, 1, 0]),
@@ -37,7 +34,6 @@ var Program = function() {
         vec3.create([0, 0, 1])
     );
 
-
     var skyBoxPrimitives = tdl.primitives.createCube(20);
     tdl.primitives.reorientPositions(skyBoxPrimitives.position, mat4.scale(mat4.identity([]), [-1, -1, -1]));
     this.sceneObjects.push(new Model(
@@ -55,10 +51,23 @@ var Program = function() {
         near: 0.1,
         far: 20
     });
+    this.cam.initControls();
+
+    this.elapsedTime = 0.0;
+    this.then = 0.0;
+    this.clock = 0.0;
 };
 
 Program.prototype.render = function() {
     this.prepareGL();
+
+    // Do the time keeping.
+    var now = (new Date()).getTime() * 0.001;
+    this.elapsedTime = (this.then == 0.0 ? 0.0 : now - this.then);
+    this.then = now;
+    this.clock += this.elapsedTime;
+
+    this.cam.move(this.elapsedTime);
 
     var projection = this.cam.computePerspective();
     var view = this.cam.computeLookAtMatrix();
