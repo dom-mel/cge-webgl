@@ -23,6 +23,7 @@
     <script type="text/javascript" src="../lib/tdl/primitives.js"></script>
     <script type="text/javascript" src="../lib/tdl/programs.js"></script>
     <script type="text/javascript" src="../lib/tdl/textures.js"></script>
+    <script type="text/javascript" src="../lib/tdl/framebuffers.js"></script>
     <script type="text/javascript" src="../lib/mathlib.js"></script>
     <script type="text/javascript" src="../lib/util.js"></script>
 
@@ -58,18 +59,48 @@
         uniform mat4 view;
         uniform mat4 model;
 
+        attribute vec2 texCoord;
+        attribute vec4 position;
+
+        varying vec2 textureIndex;
+
+        void main() {
+            gl_Position = projection * view * model * position;
+            textureIndex = texCoord;
+        }
+    </script>
+
+    <script id="textureFs" type="text/glsl">
+        precision highp float;
+
+        uniform sampler2D framebuffer;
+        uniform vec3 color;
+
+        varying vec2 textureIndex;
+
+        void main() {
+            gl_FragColor.rgb = texture2D(framebuffer, textureIndex).rgb;
+            gl_FragColor.a = 1.0;
+        }
+    </script>
+
+    <script id="skyBoxVs" type="text/glsl">
+        uniform mat4 projection;
+        uniform mat4 view;
+        uniform mat4 model;
+
         attribute vec3 normal;
         attribute vec4 position;
 
         varying vec3 textureIndex;
 
         void main() {
-            gl_Position = projection * view * model * position;
-            textureIndex = gl_Position.xyz;
+        gl_Position = projection * view * model * position;
+        textureIndex = gl_Position.xyz;
         }
     </script>
 
-    <script id="textureFs" type="text/glsl">
+    <script id="skyBoxFs" type="text/glsl">
         precision highp float;
 
         uniform samplerCube skyBox;
@@ -77,11 +108,10 @@
         varying vec3 textureIndex;
 
         void main() {
-            gl_FragColor.rgb = textureCube(skyBox, textureIndex).rgb;
-            gl_FragColor.a = 1.0;
+        gl_FragColor.rgb = textureCube(skyBox, textureIndex).rgb;
+        gl_FragColor.a = 1.0;
         }
     </script>
-
 
 </head>
 <body>
