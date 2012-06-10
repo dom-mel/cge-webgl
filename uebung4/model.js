@@ -12,12 +12,9 @@ Model.prototype.computeTransform = function() {
     return matrix;
 };
 
-Model.prototype.draw = function(view, projection) {
+Model.prototype.draw = function(params) {
 
-    this.mesh.drawPrep({
-        view : view,
-        projection: projection
-    });
+    this.mesh.drawPrep(params);
 
     this.mesh.draw({
         model : this.computeTransform(),

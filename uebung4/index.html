@@ -54,32 +54,34 @@
         }
     </script>
 
-    <script id="textureVs" type="text/glsl">
+    <script id="reflectiveTextureVs" type="text/glsl">
         uniform mat4 projection;
         uniform mat4 view;
         uniform mat4 model;
+		uniform mat4 textureProjection;
 
         attribute vec2 texCoord;
         attribute vec4 position;
 
-        varying vec2 textureIndex;
+		varying vec4 projectedTexCoord; 
 
         void main() {
             gl_Position = projection * view * model * position;
-            textureIndex = texCoord;
+            projectedTexCoord = textureProjection * position;
         }
     </script>
 
-    <script id="textureFs" type="text/glsl">
+    <script id="reflectiveTextureFs" type="text/glsl">
         precision highp float;
 
         uniform sampler2D framebuffer;
         uniform vec3 color;
 
-        varying vec2 textureIndex;
+		varying vec4 projectedTexCoord;
 
         void main() {
-            gl_FragColor.rgb = texture2D(framebuffer, textureIndex).rgb;
+			vec2 uv = vec2(projectedTexCoord.x/projectedTexCoord.w, projectedTexCoord.y/projectedTexCoord.w);
+            gl_FragColor.rgb = texture2D(framebuffer, uv).rgb;
             gl_FragColor.a = 1.0;
         }
     </script>

@@ -49,7 +49,7 @@ Program.prototype.createSceneObjects = function(shaders, textures) {
     ));
     
     this.waterMesh = new Model(
-        new tdl.models.Model(shaders.texture, tdl.primitives.createPlane(10, 10, 1, 1), textures),
+        new tdl.models.Model(shaders.reflectiveTexture, tdl.primitives.createPlane(10, 10, 1, 1), textures),
         vec3.create([0, 0, 0]),
         vec3.create([0, 0, 1])
     );
@@ -86,13 +86,23 @@ Program.prototype.renderFirstPass = function() {
     this.cam.far = 200;
     var projection = this.cam.computePerspective();
     var view = this.cam.computeReflectedLookAtMatrix(this.waterMesh.position);
+    var texProj = mat4.create([
+        0.5, 0, 0, 0.5,
+        0, 0.5, 0, 0.5,
+        0, 0, 0.5, 0.5,
+        0, 0, 0, 1
+    ]);
     
-    this.skybox.draw(view, projection);
+//    this.skybox.draw(view, projection);
     for (var i = 0; i < this.sceneObjects.length; i++) {
         var oldColor = this.sceneObjects[i].color;
         // FIXME debug code, reflection color changed
         this.sceneObjects[i].color = vec3.create([oldColor[0]/2, oldColor[1]/2, oldColor[2]/2]);
-        this.sceneObjects[i].draw(view, projection);
+        this.sceneObjects[i].draw({
+            view: view,
+            projection: projection,
+            textureProjection: texProj
+        });
         this.sceneObjects[i].color = oldColor;
     }
 };
@@ -109,7 +119,7 @@ Program.prototype.renderSecondPass = function() {
     this.skybox.position = this.cam.position;
     this.skybox.draw(view, projection);
     for (i = 0; i < this.sceneObjects.length; i++) {
-        this.sceneObjects[i].draw(view, projection);
+        this.sceneObjects[i].draw({view: view, projection: projection});
     }
     this.waterMesh.draw(view, projection);
 };
@@ -133,7 +143,7 @@ Program.prototype.prepareGL = function() {
 Program.prototype.loadShaders = function() {
     var shaders = {};
     shaders.color = tdl.programs.loadProgramFromScriptTags('colorVs', 'colorFs');
-    shaders.texture = tdl.programs.loadProgramFromScriptTags('textureVs', 'textureFs');
+    shaders.reflectiveTexture = tdl.programs.loadProgramFromScriptTags('reflectiveTextureVs', 'reflectiveTextureFs');
     shaders.skyBox = tdl.programs.loadProgramFromScriptTags('skyBoxVs', 'skyBoxFs');
     return shaders;
 };
