@@ -92,6 +92,8 @@ Program.prototype.renderFirstPass = function() {
         0, 0, 0.5, 0.5,
         0, 0, 0, 1
     ]);
+    mat4.multiply(texProj, projection);
+    mat4.multiply(texProj, this.cam.computeLookAtMatrix());
     
 //    this.skybox.draw(view, projection);
     for (var i = 0; i < this.sceneObjects.length; i++) {
@@ -117,11 +119,11 @@ Program.prototype.renderSecondPass = function() {
     view = this.cam.computeLookAtMatrix();
 
     this.skybox.position = this.cam.position;
-    this.skybox.draw(view, projection);
+    this.skybox.draw({view: view, projection: projection});
     for (i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({view: view, projection: projection});
     }
-    this.waterMesh.draw(view, projection);
+    this.waterMesh.draw({view: view, projection: projection});
 };
 
 Program.prototype.prepareGL = function() {

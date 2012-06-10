@@ -20,5 +20,4 @@ Model.prototype.draw = function(params) {
         model : this.computeTransform(),
         color : this.color
     });
-
 };

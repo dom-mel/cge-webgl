@@ -97,8 +97,8 @@
         varying vec3 textureIndex;
 
         void main() {
-        gl_Position = projection * view * model * position;
-        textureIndex = gl_Position.xyz;
+        	gl_Position = projection * view * model * position;
+        	textureIndex = gl_Position.xyz;
         }
     </script>
 
@@ -110,8 +110,8 @@
         varying vec3 textureIndex;
 
         void main() {
-        gl_FragColor.rgb = textureCube(skyBox, textureIndex).rgb;
-        gl_FragColor.a = 1.0;
+        	gl_FragColor.rgb = textureCube(skyBox, textureIndex).rgb;
+        	gl_FragColor.a = 1.0;
         }
     </script>
 
