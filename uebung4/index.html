@@ -63,11 +63,11 @@
         attribute vec2 texCoord;
         attribute vec4 position;
 
-		varying vec4 projectedTexCoord; 
+		varying vec2 projectedTexCoord;
 
         void main() {
             gl_Position = projection * view * model * position;
-            projectedTexCoord = textureProjection * position;
+            projectedTexCoord = gl_Position.xy;
         }
     </script>
 
@@ -77,11 +77,13 @@
         uniform sampler2D framebuffer;
         uniform vec3 color;
 
-		varying vec4 projectedTexCoord;
+		varying vec2 projectedTexCoord;
 
         void main() {
-			vec2 uv = vec2(projectedTexCoord.x/projectedTexCoord.w, projectedTexCoord.y/projectedTexCoord.w);
-            gl_FragColor.rgb = texture2D(framebuffer, uv).rgb;
+            vec2 uv = vec2(projectedTexCoord.x/2.0 + 0.5, projectedTexCoord.y/2.0 + 0.5);
+            //gl_FragColor.rgb = texture2D(framebuffer, uv).rgb;
+            gl_FragColor.rg = uv;
+            gl_FragColor.b = 0.0;
             gl_FragColor.a = 1.0;
         }
     </script>

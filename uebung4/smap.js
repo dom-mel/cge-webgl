@@ -86,7 +86,7 @@ Program.prototype.renderFirstPass = function() {
     this.cam.far = 200;
     var projection = this.cam.computePerspective();
     var view = this.cam.computeReflectedLookAtMatrix(this.waterMesh.position);
-    var texProj = mat4.create([
+    /*var texProj = mat4.create([
         0.5, 0, 0, 0.5,
         0, 0.5, 0, 0.5,
         0, 0, 0.5, 0.5,
@@ -94,7 +94,7 @@ Program.prototype.renderFirstPass = function() {
     ]);
     mat4.multiply(texProj, projection);
     mat4.multiply(texProj, this.cam.computeLookAtMatrix());
-    
+    */
 //    this.skybox.draw(view, projection);
     for (var i = 0; i < this.sceneObjects.length; i++) {
         var oldColor = this.sceneObjects[i].color;
@@ -102,8 +102,7 @@ Program.prototype.renderFirstPass = function() {
         this.sceneObjects[i].color = vec3.create([oldColor[0]/2, oldColor[1]/2, oldColor[2]/2]);
         this.sceneObjects[i].draw({
             view: view,
-            projection: projection,
-            textureProjection: texProj
+            projection: projection
         });
         this.sceneObjects[i].color = oldColor;
     }

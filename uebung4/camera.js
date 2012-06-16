@@ -25,15 +25,17 @@ Camera.prototype.computePerspective = function() {
 };
 
 Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
-    var reflectionMatrix = mat4.create([
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, -1, 2 * planePosition[1],
-        0, 0, 0, 1
-    ]);
+    /*var reflectionMatrix = mat4.create([
+     1, 0, 0, 0,
+     0, 1, 0, 0,
+     0, 0, -1, 2 * planePosition[1],
+     0, 0, 0, 1
+     ]);
     var matrix = mat4.create();
     mat4.multiply(this.computeLookAtMatrix(), reflectionMatrix, matrix);
     return matrix;
+    */
+    return this.computeLookAtMatrix();
 };
 
 Camera.prototype.initControls = function() {
