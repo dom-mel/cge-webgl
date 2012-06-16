@@ -24,6 +24,8 @@ var Program = function() {
     this.elapsedTime = 0.0;
     this.then = 0.0;
     this.clock = 0.0;
+    
+    this.lightPosition = vec3.create([30, 20, 20]);
 };
 
 Program.prototype.createSceneObjects = function(shaders, textures) {
@@ -89,14 +91,17 @@ Program.prototype.renderFirstPass = function() {
 
     this.skybox.draw({view: view, projection: projection});
     for (var i = 0; i < this.sceneObjects.length; i++) {
-        var oldColor = this.sceneObjects[i].color;
+        //var oldColor = this.sceneObjects[i].color;
         // FIXME debug code, reflection color changed
-        this.sceneObjects[i].color = vec3.create([oldColor[0]/2, oldColor[1]/2, oldColor[2]/2]);
+        //this.sceneObjects[i].color = vec3.create([oldColor[0]/2, oldColor[1]/2, oldColor[2]/2]);
         this.sceneObjects[i].draw({
             view: view,
-            projection: projection
-        });
-        this.sceneObjects[i].color = oldColor;
+            projection: projection,
+            lightPosition: this.lightPosition,
+            eyePosition: this.cam.position,
+            lightIntensity: vec3.create([1, 1, 1])
+            });
+        //this.sceneObjects[i].color = oldColor;
     }
 };
 
@@ -110,9 +115,15 @@ Program.prototype.renderSecondPass = function() {
     var view = this.cam.computeLookAtMatrix();
 
     this.skybox.position = this.cam.position;
-    //this.skybox.draw({view: view, projection: projection});
+    this.skybox.draw({view: view, projection: projection});
     for (i = 0; i < this.sceneObjects.length; i++) {
-        this.sceneObjects[i].draw({view: view, projection: projection});
+        this.sceneObjects[i].draw({
+            view: view,
+            projection: projection,
+            lightPosition: this.lightPosition,
+            eyePosition: this.cam.position,
+            lightIntensity: vec3.create([1, 1, 1])
+            });
     }
     this.waterMesh.draw({view: view, projection: projection});
 };

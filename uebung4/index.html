@@ -36,22 +36,56 @@
         uniform mat4 view;
         uniform mat4 model;
 
-        attribute vec4 position;
+		uniform vec3 lightPosition;
+		uniform vec3 eyePosition;
+
+		attribute vec4 position;
+		attribute vec3 normal;
+
+		varying vec3 normalW;
+		varying vec3 lightDirectionW;
+		varying vec3 eyeDirectionW;
 
         void main() {
-            gl_Position = projection * view * model * position;
+            vec4 positionW = model * position;
+			normalW = (model * vec4(normal, 0.0)).xyz;
+			lightDirectionW = lightPosition - positionW.xyz;
+			eyeDirectionW = eyePosition - positionW.xyz;
+			gl_Position = projection * view * positionW;
         }
     </script>
 
     <script id="colorFs" type="text/glsl">
-        precision highp float;
+precision highp float;
 
-        uniform vec3 color;
+uniform vec3 color;
+uniform vec3 lightIntensity;
 
-        void main() {
-            gl_FragColor.rgb = color;
-            gl_FragColor.a = 1.0;
-        }
+varying vec3 normalW;
+varying vec3 lightDirectionW;
+varying vec3 eyeDirectionW;
+
+vec3 lambert(vec3 normal, vec3 light,
+             vec3 intensity, vec3 reflectivity) {
+  return 0.1 * reflectivity * intensity +
+         0.6 * reflectivity * intensity * max(0.0, dot(normal, light));
+}
+
+vec3 phong(vec3 normal, vec3 eye, vec3 light,
+           vec3 intensity, vec3 reflectivity) {
+  return lambert(normal, light, intensity, reflectivity) +
+         0.3 * intensity * pow(max(0.0, dot(reflect(-eye, normal),
+                                      light)), 10.0);
+}
+
+void main() {
+  gl_FragColor.rgb = phong(
+    normalize(normalW),
+    normalize(eyeDirectionW),
+    normalize(lightDirectionW),
+    lightIntensity, color);
+  gl_FragColor.a = 1.0;
+}
     </script>
 
     <script id="reflectiveTextureVs" type="text/glsl">
