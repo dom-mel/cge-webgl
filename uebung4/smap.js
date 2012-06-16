@@ -86,16 +86,9 @@ Program.prototype.renderFirstPass = function() {
     this.cam.far = 200;
     var projection = this.cam.computePerspective();
     var view = this.cam.computeReflectedLookAtMatrix(this.waterMesh.position);
-    /*var texProj = mat4.create([
-        0.5, 0, 0, 0.5,
-        0, 0.5, 0, 0.5,
-        0, 0, 0.5, 0.5,
-        0, 0, 0, 1
-    ]);
-    mat4.multiply(texProj, projection);
-    mat4.multiply(texProj, this.cam.computeLookAtMatrix());
-    */
-//    this.skybox.draw(view, projection);
+
+
+    this.skybox.draw({view: view, projection: projection});
     for (var i = 0; i < this.sceneObjects.length; i++) {
         var oldColor = this.sceneObjects[i].color;
         // FIXME debug code, reflection color changed
@@ -114,11 +107,11 @@ Program.prototype.renderSecondPass = function() {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
 
     this.cam.far = 20;
-    projection = this.cam.computePerspective();
-    view = this.cam.computeLookAtMatrix();
+    var projection = this.cam.computePerspective();
+    var view = this.cam.computeLookAtMatrix();
 
     this.skybox.position = this.cam.position;
-    this.skybox.draw({view: view, projection: projection});
+    //this.skybox.draw({view: view, projection: projection});
     for (i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({view: view, projection: projection});
     }
