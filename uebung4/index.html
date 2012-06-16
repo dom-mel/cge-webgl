@@ -58,9 +58,7 @@
         uniform mat4 projection;
         uniform mat4 view;
         uniform mat4 model;
-		uniform mat4 textureProjection;
 
-        attribute vec2 texCoord;
         attribute vec4 position;
 
 		varying vec4 projectedTexCoord;
@@ -75,7 +73,6 @@
         precision highp float;
 
         uniform sampler2D framebuffer;
-        uniform vec3 color;
 
 		varying vec4 projectedTexCoord;
 
