@@ -25,17 +25,13 @@ Camera.prototype.computePerspective = function() {
 };
 
 Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
-    /*var reflectionMatrix = mat4.create([
-     1, 0, 0, 0,
-     0, 1, 0, 0,
-     0, 0, -1, 2 * planePosition[1],
-     0, 0, 0, 1
-     ]);
+    var normal = vec3.normalize(vec3.create(this.position[0], planePosition[1], this.position[2]));
+    var reflectedPosition = reflect(this.position, normal);
+    var reflectedTarget = reflect(this.target, normal);
+    var reflectedUp = reflect(this.up, normal);
     var matrix = mat4.create();
-    mat4.multiply(this.computeLookAtMatrix(), reflectionMatrix, matrix);
+    mat4.lookAt(reflectedPosition, reflectedTarget, reflectedUp, matrix);
     return matrix;
-    */
-    return this.computeLookAtMatrix();
 };
 
 Camera.prototype.initControls = function() {
@@ -67,3 +63,15 @@ Camera.prototype.move = function(elapsed) {
         );
     }
 };
+
+function reflect(a, b) {
+    // V - 2.0 * dot(N, V) * N
+    var v = vec3.create([a[0], a[1], a[2]]);
+    var n = vec3.create([b[0], b[1], b[2]]);
+    var temp = 2.0 * vec3.dot(n, v);
+    n[0] *= temp;
+    n[1] *= temp;
+    v[0] -= n[0];
+    v[1] -= n[1];
+    return v;
+}
