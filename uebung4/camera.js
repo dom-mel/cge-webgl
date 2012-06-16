@@ -25,7 +25,7 @@ Camera.prototype.computePerspective = function() {
 };
 
 Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
-    var normal = vec3.normalize(vec3.create(this.position[0], planePosition[1], this.position[2]));
+    var normal = vec3.normalize(vec3.create([this.position[0], planePosition[1], this.position[2]]));
     var reflectedPosition = reflect(this.position, normal);
     var reflectedTarget = reflect(this.target, normal);
     var reflectedUp = reflect(this.up, normal);
@@ -71,7 +71,9 @@ function reflect(a, b) {
     var temp = 2.0 * vec3.dot(n, v);
     n[0] *= temp;
     n[1] *= temp;
+    n[2] *= temp;
     v[0] -= n[0];
     v[1] -= n[1];
+    v[2] -= n[2];
     return v;
 }
