@@ -89,6 +89,7 @@ Program.prototype.renderFirstPass = function() {
     var projection = this.cam.computePerspective();
     var view = this.cam.computeReflectedLookAtMatrix(this.waterMesh.position);
 
+    this.skybox.position = this.cam.reflectedPosition;
     this.skybox.draw({view: view, projection: projection});
     for (var i = 0; i < this.sceneObjects.length; i++) {
         //var oldColor = this.sceneObjects[i].color;
