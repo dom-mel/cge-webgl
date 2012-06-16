@@ -99,7 +99,7 @@ Program.prototype.renderFirstPass = function() {
             view: view,
             projection: projection,
             lightPosition: this.lightPosition,
-            eyePosition: this.cam.position,
+            eyePosition: this.cam.reflectedPosition,
             lightIntensity: vec3.create([1, 1, 1])
             });
         //this.sceneObjects[i].color = oldColor;
