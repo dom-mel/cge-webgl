@@ -25,11 +25,18 @@ Camera.prototype.computePerspective = function() {
 };
 
 Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
-    var normal = vec3.normalize(vec3.create([this.position[0], planePosition[1], this.position[2]]));
+    
+    var normal = vec3.normalize(vec3.create([0, 1, 0]));
+    
     var reflectedPosition = reflect(this.position, normal);
-    this.reflectedPosition = reflectedPosition;
     var reflectedTarget = reflect(this.target, normal);
     var reflectedUp = reflect(this.up, normal);
+    
+    vec3.negate(reflectedPosition);
+    vec3.negate(reflectedTarget);
+    vec3.negate(reflectedUp);
+
+    this.reflectedPosition = reflectedPosition;
     var matrix = mat4.create();
     mat4.lookAt(reflectedPosition, reflectedTarget, reflectedUp, matrix);
     return matrix;
