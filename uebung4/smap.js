@@ -11,7 +11,7 @@ var Program = function() {
     this.createSceneObjects(shaders, textures);
 
     this.cam = new Camera({
-        position: vec3.create([0, 5, 4]),
+        position: vec3.create([0, 2, 4]),
         target: vec3.create(),
         up: vec3.create([ 0, 1, 0 ]),
         fov: 60,
@@ -40,15 +40,19 @@ Program.prototype.createSceneObjects = function(shaders, textures) {
 
     this.sceneObjects.push(new Model(
         new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
-        vec3.create([0, 0, 0]),
+        vec3.create([0, -0.15, 0]),
         vec3.create([0, 1, 0])
     ));
 
     this.sceneObjects.push(new Model(
         new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([-1, -1, 0]),
-        vec3.create([0, 0, 1])
+        vec3.create([1, 1, 0])
     ));
+    
+    for(var i=0; i<this.sceneObjects.length; i++) {
+        this.sceneObjects[i].direction = vec3.create([0, 1, 0]);
+    }
     
     this.waterMesh = new Model(
         new tdl.models.Model(shaders.reflectiveTexture, tdl.primitives.createPlane(10, 10, 1, 1), textures),
@@ -75,9 +79,31 @@ Program.prototype.render = function() {
     this.clock += this.elapsedTime;
 
     this.cam.move(this.elapsedTime);
+    
+    this.animateBalls(this.elapsedTime);
 
     this.renderFirstPass();
     this.renderSecondPass();
+};
+
+Program.prototype.animateBalls = function(delta) {
+    for(var i=0; i<this.sceneObjects.length; i++) {
+        if(this.sceneObjects[i].position[1] > 1.0) {
+            this.sceneObjects[i].direction = vec3.create([0, -1, 0]);
+        }
+        if(this.sceneObjects[i].position[1] < -1.0) {
+            this.sceneObjects[i].direction = vec3.create([0, 1, 0]);
+        }
+        var distance = vec3.create([this.sceneObjects[i].direction[0],
+                                     this.sceneObjects[i].direction[1],
+                                     this.sceneObjects[i].direction[2]]);
+        vec3.scale(distance, 0.5 * delta);
+        
+        vec3.add(
+                this.sceneObjects[i].position,
+                distance
+        );
+    }
 };
 
 Program.prototype.renderFirstPass = function() {
@@ -124,7 +150,10 @@ Program.prototype.renderSecondPass = function() {
             clipY: 0
         });
     }
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+    this.gl.enable(this.gl.BLEND);
     this.waterMesh.draw({view: view, projection: projection});
+    this.gl.disable(this.gl.BLEND);
 };
 
 Program.prototype.prepareGL = function() {
