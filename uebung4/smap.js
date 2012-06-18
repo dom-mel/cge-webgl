@@ -12,7 +12,7 @@ var Program = function() {
 
     this.cam = new Camera({
         position: vec3.create([0, 2, 4]),
-        target: vec3.create(),
+        target: vec3.create([0, 0, 0]),
         up: vec3.create([ 0, 1, 0 ]),
         fov: 60,
         ratio: this.canvas.clientWidth / this.canvas.clientHeight,
@@ -57,7 +57,7 @@ Program.prototype.createSceneObjects = function(shaders, textures) {
     this.waterMesh = new Model(
         new tdl.models.Model(shaders.reflectiveTexture, tdl.primitives.createPlane(10, 10, 1, 1), textures),
         vec3.create([0, 0, 0]),
-        vec3.create([0, 0, 1])
+        vec3.create([0, 0, .5])
     );
     
     var skyBoxPrimitives = tdl.primitives.createCube(20);
@@ -113,6 +113,7 @@ Program.prototype.renderFirstPass = function() {
     
     this.cam.far = 20;
     var projection = this.cam.computePerspective();
+    
     var view = this.cam.computeReflectedLookAtMatrix(this.waterMesh.position);
 
     this.skybox.position = this.cam.reflectedPosition;
@@ -150,7 +151,7 @@ Program.prototype.renderSecondPass = function() {
             clipY: 0
         });
     }
-    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     this.gl.enable(this.gl.BLEND);
     this.waterMesh.draw({view: view, projection: projection});
     this.gl.disable(this.gl.BLEND);
