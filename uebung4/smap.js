@@ -97,7 +97,8 @@ Program.prototype.renderFirstPass = function() {
             projection: projection,
             lightDirection: this.lightDirection,
             eyePosition: this.cam.reflectedPosition,
-            lightIntensity: vec3.create([1, 1, 1])
+            lightIntensity: vec3.create([1, 1, 1]),
+            clipY: -1
         });
     }
 };
@@ -119,7 +120,8 @@ Program.prototype.renderSecondPass = function() {
             projection: projection,
             lightDirection: this.lightDirection,
             eyePosition: this.cam.position,
-            lightIntensity: vec3.create([1, 1, 1])
+            lightIntensity: vec3.create([1, 1, 1]),
+            clipY: 0
         });
     }
     this.waterMesh.draw({view: view, projection: projection});
