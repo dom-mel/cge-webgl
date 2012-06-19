@@ -51,6 +51,22 @@ Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
     return matrix;
 };
 
+Camera.prototype.computeRefractedLookAtMatrix = function() {
+
+    var matIndex1 = 1; // Vacuum
+    var matIndex2 = 1.333; // Water
+
+    var refractedPosition = refract(this.position, matIndex1, matIndex2);
+    var refractedTarget = refract(this.target, matIndex1, matIndex2);
+    var refractedUp = refract(this.up, matIndex1, matIndex2);
+
+
+    this.refractedPosition = refractedPosition;
+    var matrix = mat4.create();
+    mat4.lookAt(refractedPosition, refractedTarget, refractedUp, matrix);
+    return matrix;
+};
+
 Camera.prototype.initControls = function() {
     var that = this;
     window.addEventListener('keydown', function(event) {
@@ -93,4 +109,36 @@ function reflect(a, b) {
     v[1] -= n[1];
     v[2] -= n[2];
     return v;
+}
+
+function refract(pos, matIndex1, matIndex2) {
+    var matRate = matIndex1 / matIndex2;
+
+    var viewDirection = vec3.create();
+    vec3.negate(pos, viewDirection);
+
+    var normal = vec3.normalize(vec3.create([0, 1, 0]));
+
+    var cosPhi1 = vec3.dot(normal, pos);
+
+    var cosPhi2 = Math.sqrt(1 - Math.pow(matRate, 2) * (1 - Math.pow(cosPhi1, 2)));
+
+    var cosPhi1Rate = matRate * cosPhi1;
+    var second;
+    if (cosPhi1 >= 0) {
+        second = (cosPhi1Rate - cosPhi2);
+    } else {
+        second = (cosPhi1Rate + cosPhi2);
+    }
+
+    //console.log(second);
+    var refract = vec3.create([
+        matRate * viewDirection[0] + second * normal[0],
+        matRate * viewDirection[1] + second * normal[0],
+        matRate * viewDirection[2] + second * normal[0]
+    ]);
+
+    vec3.negate(refract);
+
+    return refract;
 }

@@ -128,15 +128,20 @@
         precision highp float;
 
         uniform sampler2D reflectionFrameBuffer;
+        uniform sampler2D refractionFrameBuffer;
 		uniform vec3 color;
 
 		varying vec4 projectedTexCoord;
 
         void main() {
 			vec2 uv = vec2(projectedTexCoord.x/projectedTexCoord.w, projectedTexCoord.y/projectedTexCoord.w);
-            uv = vec2(1.0 - (uv.x/2.0 + 0.5), (uv.y/2.0 + 0.5));
-            gl_FragColor.rgb = texture2D(reflectionFrameBuffer, uv).rgb + color;
-			gl_FragColor.a = 0.5;
+            vec2 reflectedUv = vec2(1.0 - (uv.x/2.0 + 0.5), (uv.y/2.0 + 0.5));
+            vec2 refractionUv = vec2( (uv.x/2.0 + 0.5), (uv.y/2.0 + 0.5));
+
+            vec3 reflectionColor = texture2D(reflectionFrameBuffer, reflectedUv).rgb/2.0;
+            vec3 refractionColor = texture2D(refractionFrameBuffer, refractionUv).rgb/2.0;
+            gl_FragColor.rgb = reflectionColor + refractionColor;
+			gl_FragColor.a = 1.0;
         }
     </script>
 

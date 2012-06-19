@@ -84,6 +84,7 @@ Program.prototype.render = function() {
     this.animateBalls(this.elapsedTime);
 
     this.renderReflection();
+    this.renderRefraction();
     this.renderBackBuffer();
 };
 
@@ -132,7 +133,25 @@ Program.prototype.renderReflection = function() {
 };
 
 Program.prototype.renderRefraction = function() {
+    this.refractionFrameBuffer.bind();
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
 
+    this.cam.far = 20;
+    var projection = this.cam.computePerspective();
+    var view = this.cam.computeRefractedLookAtMatrix();
+
+    this.skybox.position = this.cam.refractedPosition;
+    this.skybox.draw({view: view, projection: projection});
+    for (var i = 0; i < this.sceneObjects.length; i++) {
+        this.sceneObjects[i].draw({
+            view: view,
+            projection: projection,
+            lightDirection: this.lightDirection,
+            eyePosition: this.cam.refractedPosition,
+            lightIntensity: vec3.create([1, 1, 1]),
+            clipY: 1
+        });
+    }
 };
 
 Program.prototype.renderBackBuffer = function() {
