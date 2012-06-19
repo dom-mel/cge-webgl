@@ -29,7 +29,7 @@ Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
     var normal = vec3.normalize(vec3.create([0, 1, 0]));
 
     // Matrix to reflect on Y Axis - to move water plane change calculation to
-    // planeTranslationMatrix  * reflectionMatrix * planeTranslationMatrix ^ -1
+    // TODO planeTranslationMatrix  * reflectionMatrix * planeTranslationMatrix ^ -1
     var reflectionMatrix = mat4.create([
         1,  0, 0, 0,
         0, -1, 0, 0,
@@ -56,6 +56,7 @@ Camera.prototype.computeRefractedLookAtMatrix = function() {
     var matIndex1 = 1; // Vacuum
     var matIndex2 = 1.333; // Water
 
+    // TODO dynamic refraction: M * refract * M^-1
     var refractedPosition = refract(this.position, matIndex1, matIndex2);
     var refractedTarget = refract(this.target, matIndex1, matIndex2);
     var refractedUp = refract(this.up, matIndex1, matIndex2);
@@ -97,20 +98,6 @@ Camera.prototype.move = function(elapsed) {
     }
 };
 
-function reflect(a, b) {
-    // V - 2.0 * dot(N, V) * N
-    var v = vec3.create([a[0], a[1], a[2]]);
-    var n = vec3.create([b[0], b[1], b[2]]);
-    var temp = 2.0 * vec3.dot(n, v);
-    n[0] *= temp;
-    n[1] *= temp;
-    n[2] *= temp;
-    v[0] -= n[0];
-    v[1] -= n[1];
-    v[2] -= n[2];
-    return v;
-}
-
 function refract(pos, matIndex1, matIndex2) {
     var matRate = matIndex1 / matIndex2;
 
@@ -120,10 +107,10 @@ function refract(pos, matIndex1, matIndex2) {
     var normal = vec3.normalize(vec3.create([0, 1, 0]));
 
     var cosPhi1 = vec3.dot(normal, pos);
+    var cosPhi1Rate = matRate * cosPhi1;
 
     var cosPhi2 = Math.sqrt(1 - Math.pow(matRate, 2) * (1 - Math.pow(cosPhi1, 2)));
 
-    var cosPhi1Rate = matRate * cosPhi1;
     var second;
     if (cosPhi1 >= 0) {
         second = (cosPhi1Rate - cosPhi2);
@@ -131,7 +118,6 @@ function refract(pos, matIndex1, matIndex2) {
         second = (cosPhi1Rate + cosPhi2);
     }
 
-    //console.log(second);
     var refract = vec3.create([
         matRate * viewDirection[0] + second * normal[0],
         matRate * viewDirection[1] + second * normal[0],
