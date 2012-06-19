@@ -83,8 +83,8 @@ Program.prototype.render = function() {
     
     this.animateBalls(this.elapsedTime);
 
-    this.renderFirstPass();
-    this.renderSecondPass();
+    this.renderReflection();
+    this.renderBackBuffer();
 };
 
 Program.prototype.animateBalls = function(delta) {
@@ -107,7 +107,7 @@ Program.prototype.animateBalls = function(delta) {
     }
 };
 
-Program.prototype.renderFirstPass = function() {
+Program.prototype.renderReflection = function() {
     
     this.reflectionFrameBuffer.bind();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
@@ -131,7 +131,11 @@ Program.prototype.renderFirstPass = function() {
     }
 };
 
-Program.prototype.renderSecondPass = function() {
+Program.prototype.renderRefraction = function() {
+
+};
+
+Program.prototype.renderBackBuffer = function() {
     
     this.backbuffer.bind();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
