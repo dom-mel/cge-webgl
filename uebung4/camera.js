@@ -27,14 +27,23 @@ Camera.prototype.computePerspective = function() {
 Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
     
     var normal = vec3.normalize(vec3.create([0, 1, 0]));
-    
-    var reflectedPosition = reflect(this.position, normal);
-    var reflectedTarget = reflect(this.target, normal);
-    var reflectedUp = reflect(this.up, normal);
-    
-    vec3.negate(reflectedPosition);
-    vec3.negate(reflectedTarget);
-    vec3.negate(reflectedUp);
+
+    // Matrix to reflect on Y Axis - to move water plane change calculation to
+    // planeTranslationMatrix  * reflectionMatrix * planeTranslationMatrix ^ -1
+    var reflectionMatrix = mat4.create([
+        1,  0, 0, 0,
+        0, -1, 0, 0,
+        0,  0, 1, 0,
+        0,  0, 0, 1
+    ]);
+
+    var reflectedPosition = vec3.create();
+    var reflectedTarget = vec3.create();
+    var reflectedUp = vec3.create();
+
+    mat4.multiplyVec3(reflectionMatrix, this.position, reflectedPosition);
+    mat4.multiplyVec3(reflectionMatrix, this.target, reflectedTarget);
+    mat4.multiplyVec3(reflectionMatrix, this.up, reflectedUp);
 
     this.reflectedPosition = reflectedPosition;
     var matrix = mat4.create();

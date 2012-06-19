@@ -11,8 +11,8 @@ var Program = function() {
     this.createSceneObjects(shaders, textures);
 
     this.cam = new Camera({
-        position: vec3.create([0, 2, 4]),
-        target: vec3.create([0, 0, 0]),
+        position: vec3.create([3, 2, 4]),
+        target: vec3.create([0, 1, 0]),
         up: vec3.create([ 0, 1, 0 ]),
         fov: 60,
         ratio: this.canvas.clientWidth / this.canvas.clientHeight,
