@@ -6,6 +6,7 @@ var Program = function() {
     this.gl = tdl.webgl.setupWebGL(this.canvas);
 
     var shaders = this.loadShaders();
+    this.createBuffers();
     var textures = this.loadTextures();
 
     this.createSceneObjects(shaders, textures);
@@ -108,7 +109,7 @@ Program.prototype.animateBalls = function(delta) {
 
 Program.prototype.renderFirstPass = function() {
     
-    this.frameBuffer.bind();
+    this.reflectionFrameBuffer.bind();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
     
     this.cam.far = 20;
@@ -192,14 +193,15 @@ Program.prototype.loadTextures = function() {
     ]);
     return {
         skybox: skyBox,
-        framebuffer: this.createBuffers()
+        reflectionFrameBuffer: this.reflectionFrameBuffer.texture,
+        refractionFrameBuffer: this.refractionFrameBuffer.texture
     };
 };
 
 Program.prototype.createBuffers = function() {
-    this.frameBuffer = tdl.framebuffers.createFramebuffer(this.canvas.width, this.canvas.height, false);
+    this.reflectionFrameBuffer = tdl.framebuffers.createFramebuffer(this.canvas.width, this.canvas.height, false);
+    this.refractionFrameBuffer = tdl.framebuffers.createFramebuffer(this.canvas.width, this.canvas.height, false);
     this.backbuffer = new tdl.framebuffers.BackBuffer(this.canvas);
-    return this.frameBuffer.texture;
 };
 
 

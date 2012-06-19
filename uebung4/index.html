@@ -127,7 +127,7 @@
     <script id="reflectiveTextureFs" type="text/glsl">
         precision highp float;
 
-        uniform sampler2D framebuffer;
+        uniform sampler2D reflectionFrameBuffer;
 		uniform vec3 color;
 
 		varying vec4 projectedTexCoord;
@@ -135,7 +135,7 @@
         void main() {
 			vec2 uv = vec2(projectedTexCoord.x/projectedTexCoord.w, projectedTexCoord.y/projectedTexCoord.w);
             uv = vec2(1.0 - (uv.x/2.0 + 0.5), (uv.y/2.0 + 0.5));
-            gl_FragColor.rgb = texture2D(framebuffer, uv).rgb + color;
+            gl_FragColor.rgb = texture2D(reflectionFrameBuffer, uv).rgb + color;
 			gl_FragColor.a = 0.5;
         }
     </script>
