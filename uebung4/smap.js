@@ -1,4 +1,4 @@
-
+var FAR_PLANE = 200;
 
 var Program = function() {
 
@@ -127,13 +127,16 @@ Program.prototype.renderReflection = function() {
     this.reflectionFrameBuffer.bind();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
     
-    this.cam.far = 20;
+    this.cam.far = FAR_PLANE;
     var projection = this.cam.computePerspective();
     
     var view = this.cam.computeReflectedLookAtMatrix(this.waterMesh.position);
 
+    this.gl.disable(this.gl.DEPTH_TEST);
     this.skybox.position = this.cam.reflectedPosition;
     this.skybox.draw({view: view, projection: projection});
+    this.gl.enable(this.gl.DEPTH_TEST);
+    
     for (var i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({
             view: view,
@@ -150,12 +153,15 @@ Program.prototype.renderRefraction = function() {
     this.refractionFrameBuffer.bind();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
 
-    this.cam.far = 20;
+    this.cam.far = FAR_PLANE;
     var projection = this.cam.computePerspective();
     var view = this.cam.computeRefractedLookAtMatrix();
 
+    this.gl.disable(this.gl.DEPTH_TEST);
     this.skybox.position = this.cam.refractedPosition;
     this.skybox.draw({view: view, projection: projection});
+    this.gl.enable(this.gl.DEPTH_TEST);
+    
     for (var i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({
             view: view,
@@ -173,12 +179,15 @@ Program.prototype.renderBackBuffer = function() {
     this.backbuffer.bind();
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT | this.gl.STENCIL_BUFFER_BIT);
 
-    this.cam.far = 20;
+    this.cam.far = FAR_PLANE;
     var projection = this.cam.computePerspective();
     var view = this.cam.computeLookAtMatrix();
 
+    this.gl.disable(this.gl.DEPTH_TEST);
     this.skybox.position = this.cam.position;
     this.skybox.draw({view: view, projection: projection});
+    this.gl.enable(this.gl.DEPTH_TEST);
+    
     for (i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({
             view: view,
