@@ -3,6 +3,7 @@ var Model = function(mesh, position, color) {
     this.color = color;
     this.position = position;
     this.mesh = mesh;
+    this.animate = false;
 };
 
 Model.prototype.computeTransform = function() {

@@ -47,27 +47,39 @@ Program.prototype.createSceneObjects = function(shaders, textures) {
     
     this.sceneObjects = [];
     
-    this.sceneObjects.push(new Model(
+    var sphere1 = new Model(
         new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([1, 1, 0]),
         vec3.create([1, 0, 0])
-    ));
+    );
+    sphere1.animate = true;
+    this.sceneObjects.push(sphere1);
 
-    this.sceneObjects.push(new Model(
+    var sphere2 = new Model(
         new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([0, -0.15, 0]),
         vec3.create([0, 1, 0])
-    ));
+    );
+    sphere2.animate = true;
+    this.sceneObjects.push(sphere2);
 
-    this.sceneObjects.push(new Model(
+    var sphere3 = new Model(
         new tdl.models.Model(shaders.color, tdl.primitives.createSphere(0.5, 64, 64), textures),
         vec3.create([-1, -1, 0]),
         vec3.create([1, 1, 0])
-    ));
+    );
+    sphere3.animate = true;
+    this.sceneObjects.push(sphere3);
     
     for(var i=0; i<this.sceneObjects.length; i++) {
         this.sceneObjects[i].direction = vec3.create([0, 1, 0]);
     }
+    
+    this.sceneObjects.push(new Model(
+        new tdl.models.Model(shaders.color, tdl.primitives.createPlane(100, 100, 1, 1), textures),
+        vec3.create([0, -5, 0]),
+        vec3.create([1,0.8,0.5])
+    ));
     
     this.waterMesh = new Model(
         new tdl.models.Model(shaders.reflectiveTexture, tdl.primitives.createPlane(10, 10, 1, 1), textures),
@@ -104,6 +116,9 @@ Program.prototype.render = function() {
 
 Program.prototype.animateBalls = function(delta) {
     for(var i=0; i<this.sceneObjects.length; i++) {
+        if(!this.sceneObjects[i].animate) {
+            continue;
+        }
         if(this.sceneObjects[i].position[1] > 1.0) {
             this.sceneObjects[i].direction = vec3.create([0, -1, 0]);
         }
@@ -183,7 +198,7 @@ Program.prototype.renderBackBuffer = function() {
     this.skybox.draw({view: view, projection: projection});
     this.gl.enable(this.gl.DEPTH_TEST);
     
-    for (i = 0; i < this.sceneObjects.length; i++) {
+    for (var i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({
             view: view,
             projection: projection,
