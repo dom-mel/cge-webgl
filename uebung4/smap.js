@@ -21,6 +21,20 @@ var Program = function() {
         far: 20
     });
     this.cam.initControls();
+    
+    var cam = this.cam;
+    this.canvas.addEventListener('mousedown', function(event) {
+        cam.startFreeLook(event);
+    });
+    this.canvas.addEventListener('mousemove', function(event) {
+        cam.freeLook(event);
+    });
+    this.canvas.addEventListener('mouseup', function(event) {
+        cam.stopFreeLook(event);
+    });
+    this.canvas.addEventListener('mouseout', function(event) {
+        cam.stopFreeLook(event);
+    });
 
     this.elapsedTime = 0.0;
     this.then = 0.0;

@@ -48,10 +48,7 @@
 		varying vec3 eyeDirectionW;
 		varying float discardFragment;
 
-        void main() {
-			discardFragment = 0.0;
-            vec4 positionW = model * position;
-
+		void clip(vec4 positionW) {
 			if(clipY != 0.0) {
 				if(clipY == 1.0) {
 					if(positionW.y > 0.0) {
@@ -64,6 +61,13 @@
 					}
 				}
 			}
+		}
+
+        void main() {
+			discardFragment = 0.0;
+            vec4 positionW = model * position;
+
+			clip(positionW);
 
 			normalW = (model * vec4(normal, 0.0)).xyz;
 			lightDirectionW = lightDirection;

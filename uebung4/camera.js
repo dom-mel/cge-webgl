@@ -9,7 +9,12 @@ var Camera = function(settings) {
     this.far = settings.far;
 
     this.pressed = {};
-    this.speed = 1.0;
+    this.speed = 5.0;
+    this.moving = false;
+    this.oldx = 0;
+    this.oldy = 0;
+    this.xrot = 0;
+    this.yrot = 0;
 };
 
 Camera.prototype.computeLookAtMatrix = function() {
@@ -80,22 +85,76 @@ Camera.prototype.initControls = function() {
 
 Camera.prototype.move = function(elapsed) {
 
+    var a = 65;
+    var d = 68;
+    var w = 87;
+    var s = 83;
+    var shift = 16;
+    var speedModifier = 1.0;
+    
     var direction = vec3.create();
     vec3.subtract(this.position, this.target, direction);
+    vec3.normalize(direction);
+    
+    if(shift in this.pressed) {
+        speedModifier = 2.0;
+    }
 
-    if (87 in this.pressed) {
+    if (w in this.pressed) {
         vec3.add(
             this.position,
-            vec3.scale(direction, -this.speed * elapsed)
+            vec3.scale(direction, -this.speed * speedModifier * elapsed)
         );
     }
 
-    if (83 in this.pressed) {
+    if (s in this.pressed) {
         vec3.add(
             this.position,
-            vec3.scale(direction, this.speed * elapsed)
+            vec3.scale(direction, this.speed * speedModifier * elapsed)
         );
     }
+    
+    var side = vec3.create();
+    vec3.cross(this.position, direction, side);
+    vec3.normalize(side);
+    
+    if(a in this.pressed) {
+        vec3.add(
+            this.position,
+            vec3.scale(side, -this.speed * speedModifier * elapsed)
+        );
+    }
+    
+    if(d in this.pressed) {
+        vec3.add(
+            this.position,
+            vec3.scale(side, this.speed * speedModifier * elapsed)
+        );
+    }
+};
+
+Camera.prototype.freeLook = function(event) {
+    if(!this.moving) {
+        return;
+    }
+    var dx = this.oldx - event.x;
+    var dy = this.oldy - event.y;
+    
+    this.xrot += dy;
+    this.yrot += dx;
+    
+    this.oldx = event.x;
+    this.oldy = event.y;
+};
+
+Camera.prototype.startFreeLook = function(event) {
+    this.moving = true;
+    this.oldx = event.x;
+    this.oldy = event.y;
+};
+
+Camera.prototype.stopFreeLook = function(event) {
+    this.moving = false;
 };
 
 function refract(pos, matIndex1, matIndex2) {
@@ -127,4 +186,8 @@ function refract(pos, matIndex1, matIndex2) {
     vec3.negate(refract);
 
     return refract;
+}
+
+function degToRad(deg) {
+    return (deg * Math.PI) / 180.0;
 }
