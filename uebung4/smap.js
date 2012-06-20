@@ -75,11 +75,11 @@ Program.prototype.createSceneObjects = function(shaders, textures) {
         this.sceneObjects[i].direction = vec3.create([0, 1, 0]);
     }
     
-    this.sceneObjects.push(new Model(
-        new tdl.models.Model(shaders.color, tdl.primitives.createPlane(100, 100, 1, 1), textures),
-        vec3.create([0, -5, 0]),
-        vec3.create([1,0.8,0.5])
-    ));
+//    this.sceneObjects.push(new Model(
+//        new tdl.models.Model(shaders.color, tdl.primitives.createPlane(100, 100, 1, 1), textures),
+//        vec3.create([0, -5, 0]),
+//        vec3.create([1,0.8,0.5])
+//    ));
     
     this.waterMesh = new Model(
         new tdl.models.Model(shaders.reflectiveTexture, tdl.primitives.createPlane(10, 10, 1, 1), textures),
