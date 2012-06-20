@@ -161,7 +161,7 @@
 
         void main() {
         	gl_Position = projection * view * model * position;
-        	textureIndex = gl_Position.xyz;
+        	textureIndex = position.xyz;
         }
     </script>
 
