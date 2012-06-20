@@ -157,11 +157,6 @@ Program.prototype.renderRefraction = function() {
     var projection = this.cam.computePerspective();
     var view = this.cam.computeRefractedLookAtMatrix();
 
-    this.gl.disable(this.gl.DEPTH_TEST);
-    this.skybox.position = this.cam.refractedPosition;
-    this.skybox.draw({view: view, projection: projection});
-    this.gl.enable(this.gl.DEPTH_TEST);
-    
     for (var i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({
             view: view,
