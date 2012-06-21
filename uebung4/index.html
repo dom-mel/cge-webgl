@@ -226,15 +226,64 @@
 
     <div class="page-header">
         <h1>
-            &Uuml;bung 4 <small>Water Shading</small>
+            &Uuml;bung 4 <small>Wasser Shader: Reflektion und Refraktion</small>
         </h1>
     </div>
     <div class="row">
         <div class="span6">
             <h2>Aufgabe</h2>
             <p>
-                FIXME
+                Es sollen Shaderporgramme entwickelt werden, die eine Wasseroberfläche mit dynamischer Reflektion der gesamten Szenerie darstellen. Zusätzlich zur Reflektion soll auch die Lichtbrechung (Refraktion) für Objekte unter Wasser gerendert werden.
             </p>
+            <h2>Lösungsansatz</h2>
+            <p>
+            	Zunächst einmal ist es auffällig, dass die Spiegelung der Szenerie auf der Wasseroberfläche der Betrachtung der Szene aus einem anderen Blickwinkel entspricht. Anstatt also für die Reflektion ein Raytracing vorzunehmen, bietet es sich an, den Blickwinkel des Betrachters so im Raum zu verschieben, dass er dem reflektierten Blickwinkel entspricht. Das von dem verschobenen Blickwinkel aus betrachtete Ergebniss wird dann zunächst in eine Textur gerendert. Das gleiche gilt auch für die Refraktion. Dies geschieht in zwei unabhängigen Render-Passen.
+            </p>
+            <p>
+            	In einem dritten Renderpass werden die beiden Texturen, die in den vorhergegangenen Passen gerendert wurden, gewichtet zusammengebracht und per Texturprojektion auf der Wasseroberfläche aufgetragen. Zusätzlich wird die normale Szenerie erneut gerendert. Durch dieses Verfahren ergibt sich eine Spiegelung der gesamten Szenerie auf der Wasseroberfläche.
+            </p>
+            <h2>Implementierung der Reflektion</h2>
+            <p>
+            	Um die Reflektion aus einem anderen Blickwinkel zu rendern, wird den Shadern für den Reflektionspass eine modifizierte <i>View-Matrix</i> übergeben. Diese View-Matrix wird berechnet aus den gespiegelten Kameravektoren: <i>position, target und up</i>. Die Spiegelung wird berechnet durch Multiplikation der genannten Vektoren mit einer speziellen Transformationsmatrix. Da in der vorliegenden Lösung die Wasserebene stets auf der Höhe <i>y=0</i> liegt, ist zunächst eine Matrix ausreichend, die an der Y-Achse spiegelt:
+<pre>var reflectionMatrix = mat4.create([
+	1,  0, 0, 0,
+	0, -1, 0, 0,
+	0,  0, 1, 0,
+	0,  0, 0, 1
+]);</pre>
+            </p>
+            <p>
+            	Die Spiegelmatrix <strong>M<sub>r</sub></strong> lässt sich auch so modifizieren, dass sie für eine Spiegelfläche an einer beliebigen Position einsetzbar ist. Dazu muss zunächst eine Translationsmatrix <strong>M<sub>t</sub></strong> berechnet werden. Diese wird dann mit der Spiegelmatrix multipliziert und anschließend wird die resultierende Matrix noch einmal mit der Inversen der Translationsmatrix multipliziert:
+            </p>
+            <p class="well">
+            	M<sub>r</sub> = M<sub>t</sub> * M<sub>r</sub> * (M<sub>t</sub>)<sup>-1</sup>
+            </p>
+            <h2>Implementierung der Refraktion</h2>
+            <p>
+            	TODO
+            </p>
+            <h2>Clipping</h2>
+            <p>
+            	Bei den ersten beiden Renderdurchläufen für Reflektion und Refraktion ergibt sich das Problem, dass ohne Weiteres auch Objekte Reflektiert werden, die sich unter der Wasseroberfläche befinden. Gleiches gilt für die Refraktion. Um dieses Problem zu beheben, werden normalerweise <i>Clipping-Planes</i> verwendet. In WebGL sind jedoch keine Clipping-Planes verfügbar. Aus diesem Grund wird das Clipping im Shaderprogramm manuell vorgenommen. Dazu wird im Vertex Shader die Vertexposition ausgewertet. Liegt diese im Abzuschneidenden Bereich, wird ein Gleitkommawert von 1.0 an den Fragment Shader übergeben. Dort wird dieser Wert ausgewertet und Fragmente entsprechend verworfen.
+            </p>
+            <h2>Fresnel'sche Gleichung im finalen Renderpass</h2>
+            <p>
+            	Die Fresnel'sche Gleichung nimmt eine Gewichtung zwischen der reflektierten und gebrochenen Farbe vor. Dieses Gewicht ist dabei abhängig von den Materialeigenschaften der Spiegelfläche (Brechungsindex) und dem Blickwinkel des Betrachters. Diese Gleichung ist sehr aufwändig zu berechnen, deshalb wird in diesem Ansatz die Schlick-Approximation verwendet:
+            </p>
+            <p class="well">
+            	Sei <i>N</i> der Normalvektor der Oberfläche, <i>d</i> die Blickrichtung des Betrachters und <i>n</i> der Brechungsindex der Spiegelfläche. Die gesuchten Farbkoeffizienten für Reflektion <i>R</i> und Refraktion <i>T</i> berechnen sich:<br/><br/>
+            	R<sub>0</sub> = (n - 1 / n + 1)<sup>2</sup><br/>
+            	Cos<sub>Phi</sub> = n * -d<br/>
+            	<strong>R = R<sub>0</sub> + (1 - R<sub>0</sub>) * (1 - Cos<sub>Phi</sub>)<sup>5</sup></strong><br/>
+            	<strong>T = 1 - R</strong>
+            </p>
+            Die aus dieser Gleichung resultierenden Koeffizienten <i>R</i> und <i>T</i> werden im Fragmentshader mit den jeweiligen Farbanteilen von Reflektion und Refraktion multipliziert und führen so zu einer Gewichtung der Farbanteile.
+		</div>
+		<div class="span6">
+            <h2>Demo</h2>
+            <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+		<div class="span6">
             <h2>Verwendete Resourcen</h2>
             <ul>
                 <li><a href="https://github.com/toji/gl-matrix" target="_blank">glMatrix Bibliothek</a>
@@ -253,8 +302,13 @@
                 </li>
                 <li>
                     <a href="http://www.3delyvisions.com/skf1.htm" target="_blank">
-                        Skybox texture
+                        Skybox-Textur
                     </a>
+                </li>
+                <li>
+                	<a href="https://public.beuth-hochschule.de/~tramberend/11-ss/mb5-cg2/04-recursive-ray-tracing-110420-handout.pdf" target="_blank">
+                		Fresnel'sche Gleichung und Schlicks Approximierung
+                	</a>
                 </li>
             </ul>
             <h2>Quellcode</h2>
@@ -266,12 +320,12 @@
                 </li>
                 <li>
                     <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung4/model.js" target="_blank">
-                        Modellklasse
+                        Prototyp für 3D-Modellobjekte
                     </a>
                 </li>
                 <li>
                     <a href="https://github.com/dom-mel/cge-webgl/blob/gh-pages/uebung4/camera.js" target="_blank">
-                        Kameraklasse
+                        Prototyp für Kamera
                     </a>
                 </li>
                 <li>
@@ -280,10 +334,6 @@
                     </a>
                 </li>
             </ul>
-        </div>
-        <div class="span6">
-            <h2>Demo</h2>
-            <canvas id="canvas" width="500" height="500"></canvas>
         </div>
     </div>
 </div>
