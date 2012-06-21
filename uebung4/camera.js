@@ -56,16 +56,11 @@ Camera.prototype.computeReflectedLookAtMatrix = function(planePosition) {
     return matrix;
 };
 
-Camera.prototype.computeRefractedLookAtMatrix = function() {
-
-    var matIndex1 = 1; // Vacuum
-    var matIndex2 = 1.333; // Water
-
+Camera.prototype.computeRefractedLookAtMatrix = function(matIndex1, matIndex2) {
     // TODO dynamic refraction: M * refract * M^-1
     var refractedPosition = refract(this.position, matIndex1, matIndex2);
     var refractedTarget = refract(this.target, matIndex1, matIndex2);
     var refractedUp = refract(this.up, matIndex1, matIndex2);
-
 
     this.refractedPosition = refractedPosition;
     var matrix = mat4.create();

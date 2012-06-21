@@ -1,4 +1,5 @@
 var FAR_PLANE = 200;
+var REFRACT_INDEX_WATER = 1.333;
 
 var Program = function() {
 
@@ -170,7 +171,7 @@ Program.prototype.renderRefraction = function() {
 
     this.cam.far = FAR_PLANE;
     var projection = this.cam.computePerspective();
-    var view = this.cam.computeRefractedLookAtMatrix();
+    var view = this.cam.computeRefractedLookAtMatrix(1, REFRACT_INDEX_WATER);
 
     for (var i = 0; i < this.sceneObjects.length; i++) {
         this.sceneObjects[i].draw({
@@ -205,7 +206,10 @@ Program.prototype.renderBackBuffer = function() {
             lightDirection: this.lightDirection,
             eyePosition: this.cam.position,
             lightIntensity: vec3.create([1, 1, 1]),
-            clipY: 0
+            clipY: 0,
+            camPosW: this.cam.position,
+            camTargetW: this.cam.target,
+            refractIndex: REFRACT_INDEX_WATER
         });
     }
     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
