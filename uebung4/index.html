@@ -233,14 +233,29 @@
         <div class="span6">
             <h2>Aufgabe</h2>
             <p>
-                Es sollen Shaderporgramme entwickelt werden, die eine Wasseroberfläche mit dynamischer Reflektion der gesamten Szenerie darstellen. Zusätzlich zur Reflektion soll auch die Lichtbrechung (Refraktion) für Objekte unter Wasser gerendert werden.
+                Es sollen Shaderporgramme entwickelt werden, die eine Wasseroberfläche mit
+                dynamischer Reflektion der gesamten Szenerie darstellen.
+                Zusätzlich zur Reflektion soll auch die Lichtbrechung (Refraktion)
+                für Objekte unter Wasser gerendert werden.
             </p>
             <h2>Lösungsansatz</h2>
             <p>
-            	Zunächst einmal ist es auffällig, dass die Spiegelung der Szenerie auf der Wasseroberfläche der Betrachtung der Szene aus einem anderen Blickwinkel entspricht. Anstatt also für die Reflektion ein Raytracing vorzunehmen, bietet es sich an, den Blickwinkel des Betrachters so im Raum zu verschieben, dass er dem reflektierten Blickwinkel entspricht. Das von dem verschobenen Blickwinkel aus betrachtete Ergebniss wird dann zunächst in eine Textur gerendert. Das gleiche gilt auch für die Refraktion. Dies geschieht in zwei unabhängigen Render-Passen.
+            	Zunächst einmal ist es auffällig, dass die Spiegelung der Szenerie auf der Wasseroberfläche
+                der Betrachtung der Szene aus einem anderen Blickwinkel entspricht.
+                Anstatt also für die Reflektion ein Raytracing vorzunehmen, bietet es sich an,
+                den Blickwinkel des Betrachters so im Raum zu verschieben,
+                ass er dem reflektierten Blickwinkel entspricht.
+                Das von dem verschobenen Blickwinkel aus betrachtete Ergebniss wird dann zunächst
+                in eine Textur gerendert.
+                Das gleiche gilt auch für die Refraktion.
+                Dies geschieht in zwei unabhängigen Render-Passen.
             </p>
             <p>
-            	In einem dritten Renderpass werden die beiden Texturen, die in den vorhergegangenen Passen gerendert wurden, gewichtet zusammengebracht und per Texturprojektion auf der Wasseroberfläche aufgetragen. Zusätzlich wird die normale Szenerie erneut gerendert. Durch dieses Verfahren ergibt sich eine Spiegelung der gesamten Szenerie auf der Wasseroberfläche.
+            	In einem dritten Renderpass werden die beiden Texturen,
+                die in den vorhergegangenen Passen gerendert wurden,
+                gewichtet zusammengebracht und per Texturprojektion auf der Wasseroberfläche aufgetragen.
+                Zusätzlich wird die normale Szenerie erneut gerendert.
+                Durch dieses Verfahren ergibt sich eine Spiegelung der gesamten Szenerie auf der Wasseroberfläche.
             </p>
             <h2>Implementierung der Reflektion</h2>
             <p>
@@ -260,7 +275,14 @@
             </p>
             <h2>Implementierung der Refraktion</h2>
             <p>
-            	TODO
+            	Durch die Refraktion wird die Lichtbrechung dargestellt,
+                die beim wechsel von einem Medium in ein anderes auftritt.
+                Die herangehensweiße ist ähnlich zur Reflektion.
+                Es wird eine weitere Textur von einer weiteren Kameraposition erzeugt.
+                Die position wird in Abhängigkeit der Materialkonstanten der Medien berechnet.
+            </p>
+            <p>
+                TODO Rechnung
             </p>
             <h2>Clipping</h2>
             <p>
@@ -282,6 +304,19 @@
 		<div class="span6">
             <h2>Demo</h2>
             <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+        <div class="span6">
+            <h2>Steuerung</h2>
+            <dl class="dl-horizontal">
+                <dt>W</dt>
+                <dd>Vorwärts</dd>
+                <dt>A</dt>
+                <dd>Links</dd>
+                <dt>S</dt>
+                <dd>Rückwärts</dd>
+                <dt>D</dt>
+                <dd>Rechts</dd>
+            </dl>
         </div>
 		<div class="span6">
             <h2>Verwendete Resourcen</h2>
