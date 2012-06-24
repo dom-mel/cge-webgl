@@ -153,6 +153,9 @@
 			float R0 = ( (refractIndex-1.0)/(refractIndex+1.0) ) * ( (refractIndex-1.0)/(refractIndex+1.0) );
 			R = R0 + (1.0-R0) * pow((1.0 - cosPhi1), 5.0);
 			T = 1.0 - R;
+			// FIXME debug:
+			R = 0.4;
+			T = 0.6;
 		}
 
         void main() {
@@ -284,6 +287,13 @@
             <canvas id="canvas" width="500" height="500"></canvas>
         </div>
 		<div class="span6">
+			<h2>Kamerasteuerung</h2>
+			<p>
+			<strong>w:</strong> vorwärts<br/>
+			<strong>s:</strong> rückwärts<br/>
+			<strong>a:</strong> seitwärts nach links<br/>
+			<strong>d:</strong> seitwärts nach rechts<br/>
+			</p>
             <h2>Verwendete Resourcen</h2>
             <ul>
                 <li><a href="https://github.com/toji/gl-matrix" target="_blank">glMatrix Bibliothek</a>
