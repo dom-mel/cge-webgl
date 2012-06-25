@@ -21,3 +21,7 @@ img.math {
     display: block;
     margin: 0 auto;
 }
+
+pre.math {
+    font-size: 110%;
+}
