@@ -236,25 +236,40 @@
         <div class="span6">
             <h2>Aufgabe</h2>
             <p>
-                Es sollen Shaderporgramme entwickelt werden, die eine Wasseroberfläche mit dynamischer Reflektion der gesamten Szenerie darstellen. Zusätzlich zur Reflektion soll auch die Lichtbrechung (Refraktion) für Objekte unter Wasser gerendert werden.
+                Es sollen Shaderporgramme entwickelt werden, die eine Wasseroberfläche mit
+                dynamischer Reflektion der gesamten Szenerie darstellen.
+                Zusätzlich zur Reflektion soll auch die Lichtbrechung (Refraktion)
+                für Objekte unter Wasser gerendert werden.
             </p>
             <h2>Lösungsansatz</h2>
             <p>
-            	Zunächst einmal ist es auffällig, dass die Spiegelung der Szenerie auf der Wasseroberfläche der Betrachtung der Szene aus einem anderen Blickwinkel entspricht. Anstatt also für die Reflektion ein Raytracing vorzunehmen, bietet es sich an, den Blickwinkel des Betrachters so im Raum zu verschieben, dass er dem reflektierten Blickwinkel entspricht. Das von dem verschobenen Blickwinkel aus betrachtete Ergebniss wird dann zunächst in eine Textur gerendert. Das gleiche gilt auch für die Refraktion. Dies geschieht in zwei unabhängigen Render-Passen.
+            	Zunächst einmal ist es auffällig, dass die Spiegelung der Szenerie auf der Wasseroberfläche
+                der Betrachtung der Szene aus einem anderen Blickwinkel entspricht.
+                Anstatt also für die Reflektion ein Raytracing vorzunehmen, bietet es sich an,
+                den Blickwinkel des Betrachters so im Raum zu verschieben,
+                ass er dem reflektierten Blickwinkel entspricht.
+                Das von dem verschobenen Blickwinkel aus betrachtete Ergebniss wird dann zunächst
+                in eine Textur gerendert.
+                Das gleiche gilt auch für die Refraktion.
+                Dies geschieht in zwei unabhängigen Render-Passen.
             </p>
             <p>
-            	In einem dritten Renderpass werden die beiden Texturen, die in den vorhergegangenen Passen gerendert wurden, gewichtet zusammengebracht und per Texturprojektion auf der Wasseroberfläche aufgetragen. Zusätzlich wird die normale Szenerie erneut gerendert. Durch dieses Verfahren ergibt sich eine Spiegelung der gesamten Szenerie auf der Wasseroberfläche.
+            	In einem dritten Renderpass werden die beiden Texturen,
+                die in den vorhergegangenen Passen gerendert wurden,
+                gewichtet zusammengebracht und per Texturprojektion auf der Wasseroberfläche aufgetragen.
+                Zusätzlich wird die normale Szenerie erneut gerendert.
+                Durch dieses Verfahren ergibt sich eine Spiegelung der gesamten Szenerie auf der Wasseroberfläche.
             </p>
             <h2>Implementierung der Reflektion</h2>
             <p>
-            	Um die Reflektion aus einem anderen Blickwinkel zu rendern, wird den Shadern für den Reflektionspass eine modifizierte <i>View-Matrix</i> übergeben. Diese View-Matrix wird berechnet aus den gespiegelten Kameravektoren: <i>position, target und up</i>. Die Spiegelung wird berechnet durch Multiplikation der genannten Vektoren mit einer speziellen Transformationsmatrix. Da in der vorliegenden Lösung die Wasserebene stets auf der Höhe <i>y=0</i> liegt, ist zunächst eine Matrix ausreichend, die an der Y-Achse spiegelt:
-<pre>var reflectionMatrix = mat4.create([
-	1,  0, 0, 0,
-	0, -1, 0, 0,
-	0,  0, 1, 0,
-	0,  0, 0, 1
-]);</pre>
+                Um die Reflektion aus einem anderen Blickwinkel zu rendern, wird den Shadern für den Reflektionspass eine modifizierte <i>View-Matrix</i> übergeben. Diese View-Matrix wird berechnet aus den gespiegelten Kameravektoren: <i>position, target und up</i>. Die Spiegelung wird berechnet durch Multiplikation der genannten Vektoren mit einer speziellen Transformationsmatrix. Da in der vorliegenden Lösung die Wasserebene stets auf der Höhe <i>y=0</i> liegt, ist zunächst eine Matrix ausreichend, die an der Y-Achse spiegelt:
             </p>
+            <pre class="well-large">var reflectionMatrix = mat4.create([
+    1,  0, 0, 0,
+    0, -1, 0, 0,
+    0,  0, 1, 0,
+    0,  0, 0, 1
+]);</pre>
             <p>
             	Die Spiegelmatrix <strong>M<sub>r</sub></strong> lässt sich auch so modifizieren, dass sie für eine Spiegelfläche an einer beliebigen Position einsetzbar ist. Dazu muss zunächst eine Translationsmatrix <strong>M<sub>t</sub></strong> berechnet werden. Diese wird dann mit der Spiegelmatrix multipliziert und anschließend wird die resultierende Matrix noch einmal mit der Inversen der Translationsmatrix multipliziert:
             </p>
@@ -263,7 +278,32 @@
             </p>
             <h2>Implementierung der Refraktion</h2>
             <p>
-            	TODO
+                Durch die Refraktion wird die Lichtbrechung dargestellt, die beim Wechsel von einem Medium in ein anderes stattfindet. Die Herangehensweise ist ähnlich zur Reflektion. Die Kamera wird an die Stelle verschoben, die dem Blickwinkel nach der Brechung des Lichtes entspricht. Alle Elemente über dem Wasser werden hierbei verworfen. Das Ergebnis wird in eine Textur gerendert aus welcher beim finalen Rendern die Farbinformationen entnommen werden.
+            </p>
+            <dl class="dl-horizontal">
+                <dt>n</dt>
+                <dd>Oberflächennormale</dd>
+
+                <dt>d</dt>
+                <dd>Blickrichtung der Kamera</dd>
+
+                <dt>n1, n2</dt>
+                <dd>Refraktionsindizes des jeweiligen Materials</dd>
+
+                <dt>d<sub>t</sub></dt>
+                <dd>Lichtstrahl nach Refraktion</dd>
+            </dl>
+            <pre class="well-large math">
+cos &#934;<sub>1</sub> = n * (-d)
+cos &#934;<sub>2</sub> = sqrt(1 - (n1/n2)<sup>2</sup> * (1 - (cos &#934;<sub>2</sub>)<sup>2</sup>)
+
+für cos &#934;<sub>1</sub> >= 0
+d<sub>t</sub> = (n1 / n2) * d + (n1/n2 * cos &#934;<sub>1</sub> - cos &#934;<sub>2</sub>) * n
+
+für cos &#934;<sub>1</sub> < 0
+d<sub>t</sub> = (n1 / n2) * d + (n1/n2 * cos &#934;<sub>1</sub> + cos &#934;<sub>2</sub>) * n</pre>
+            <p>
+                Mit der vorrangegangenen Formel erhält man einen Vektor d<sub>t</sub>, welcher dem Lichtstrahl nach der Refraktion gleicht. Um nun die richtige Position für die Kamera zu erhalten, muss -1 * d<sub>t</sub> verwendet werden. Damit liegt die Kamera nun einige Grad neben der Ausgangsposition der Kamera.
             </p>
             <h2>Clipping</h2>
             <p>
@@ -273,11 +313,11 @@
             <p>
             	Die Fresnel'sche Gleichung nimmt eine Gewichtung zwischen der reflektierten und gebrochenen Farbe vor. Dieses Gewicht ist dabei abhängig von den Materialeigenschaften der Spiegelfläche (Brechungsindex) und dem Blickwinkel des Betrachters. Diese Gleichung ist sehr aufwändig zu berechnen, deshalb wird in diesem Ansatz die Schlick-Approximation verwendet:
             </p>
-            <p class="well">
+            <p class="well-large">
             	Sei <i>N</i> der Normalvektor der Oberfläche, <i>d</i> die Blickrichtung des Betrachters und <i>n</i> der Brechungsindex der Spiegelfläche. Die gesuchten Farbkoeffizienten für Reflektion <i>R</i> und Refraktion <i>T</i> berechnen sich:<br/><br/>
             	R<sub>0</sub> = (n - 1 / n + 1)<sup>2</sup><br/>
-            	Cos<sub>Phi</sub> = n * -d<br/>
-            	<strong>R = R<sub>0</sub> + (1 - R<sub>0</sub>) * (1 - Cos<sub>Phi</sub>)<sup>5</sup></strong><br/>
+            	Cos<sub>&#934;</sub> = n * -d<br/>
+            	<strong>R = R<sub>0</sub> + (1 - R<sub>0</sub>) * (1 - Cos<sub>&#934;</sub>)<sup>5</sup></strong><br/>
             	<strong>T = 1 - R</strong>
             </p>
             Die aus dieser Gleichung resultierenden Koeffizienten <i>R</i> und <i>T</i> werden im Fragmentshader mit den jeweiligen Farbanteilen von Reflektion und Refraktion multipliziert und führen so zu einer Gewichtung der Farbanteile.
@@ -285,6 +325,19 @@
 		<div class="span6">
             <h2>Demo</h2>
             <canvas id="canvas" width="500" height="500"></canvas>
+        </div>
+        <div class="span6">
+            <h2>Steuerung</h2>
+            <dl class="dl-horizontal">
+                <dt>W</dt>
+                <dd>Vorwärts</dd>
+                <dt>A</dt>
+                <dd>Links</dd>
+                <dt>S</dt>
+                <dd>Rückwärts</dd>
+                <dt>D</dt>
+                <dd>Rechts</dd>
+            </dl>
         </div>
 		<div class="span6">
 			<h2>Kamerasteuerung</h2>
