@@ -287,7 +287,7 @@
                 <dt>n1, n2</dt>
                 <dd>Refraktionsindizes des jeweiligen Materials</dd>
 
-                <dt>dt</dt>
+                <dt>d<sub>t</sub></dt>
                 <dd>Lichtstrahl nach Refraktion</dd>
             </dl>
             <pre class="well-large math">
@@ -299,6 +299,9 @@ d<sub>t</sub> = (n1 / n2) * d + (n1/n2 * cos &#934;<sub>1</sub> - cos &#934;<sub
 
 für cos &#934;<sub>1</sub> < 0
 d<sub>t</sub> = (n1 / n2) * d + (n1/n2 * cos &#934;<sub>1</sub> + cos &#934;<sub>2</sub>) * n</pre>
+            <p>
+                Mit der vorrangegangenen Formel erhält man einen Vektor d<sub>t</sub>, welcher dem Lichtstrahl nach der Refraktion gleicht. Um nun die richtige Position für die Kamera zu erhalten, muss -1 * d<sub>t</sub> verwendet werden. Damit liegt die Kamera nun einige Grad neben der Ausgangsposition der Kamera.
+            </p>
             <h2>Clipping</h2>
             <p>
             	Bei den ersten beiden Renderdurchläufen für Reflektion und Refraktion ergibt sich das Problem, dass ohne Weiteres auch Objekte Reflektiert werden, die sich unter der Wasseroberfläche befinden. Gleiches gilt für die Refraktion. Um dieses Problem zu beheben, werden normalerweise <i>Clipping-Planes</i> verwendet. In WebGL sind jedoch keine Clipping-Planes verfügbar. Aus diesem Grund wird das Clipping im Shaderprogramm manuell vorgenommen. Dazu wird im Vertex Shader die Vertexposition ausgewertet. Liegt diese im Abzuschneidenden Bereich, wird ein Gleitkommawert von 1.0 an den Fragment Shader übergeben. Dort wird dieser Wert ausgewertet und Fragmente entsprechend verworfen.
